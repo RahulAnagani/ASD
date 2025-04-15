@@ -1,0 +1,536 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+/* From Uiverse.io by rishichawda */ 
+/* The switch - the box around the slider */
+/* From Uiverse.io by alexruix */ 
+/* The switch - the box around the slider */
+.switch {
+    font-size: 17px;
+    position: relative;
+    display: inline-block;
+    width: 3.5em;
+    height: 2em;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The slider */
+  
+  
+  
+  #alertbox {
+    width:100%;
+    margin:25px auto;
+    border:1px solid rgba(0,0,0,0.3);
+    padding:15px 0 0;
+    box-shadow:0 1px 10px rgba(0,0,0,0.2);
+    background:#fff;
+    animation:slidedown 3s ease;
+  }
+  @keyframes slidedown {
+     0%{ transform:translateY(10px); opacity:0; }
+    65%,100%{ transform:translateY(0); opacity:1; }
+  }
+  section p { color:#222; padding:0 20px; }
+ 
+  
+  #status {
+    background:#fff;
+    border:1px solid #ccc;
+    border-radius:26px;
+    height:52px;
+  }
+  
+  @keyframes fadein {
+     from{ opacity:0; }
+    to{ opacity:1; }
+  }
+  
+  .delete-notice { display:none; user-select:none; font-size:20px; line-height:50px; color:#ED4545; animation:fadein 4s ease; }
+  
+  #confirm {
+    appearance:none!important;
+    background:transparent;
+    height:50px;
+    padding:0 5px;
+    width:100%;
+  }
+  
+
+
+  .dark-mode {
+    @apply dark:text-white dark:bg-gray-950;
+  }
+  
+  .glassy-metallic {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1); /* Slight white background */
+    backdrop-filter: blur(10px) saturate(180%); /* Apply blur + saturation */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Optional for metallic feel */
+    overflow: hidden; /* Ensures no overflow of the glass effect */
+  }
+  /* From Uiverse.io by LightAndy1 */ 
+.wrapper1 {
+  --font-color-dark: #323232;
+  --font-color-light: #fff;
+  --bg-color: #fff;
+  --main-color: #323232;
+  --secondary-color: #505050;
+  position: relative;
+  width: 250px;
+  height: 36px;
+  background-color: var(--bg-color);
+  border: 2px solid var(--main-color);
+  border-radius: 34px;
+  display: flex;
+  flex-direction: row;
+  box-shadow: 4px 4px var(--main-color);
+}
+
+.option1 {
+  margin-right: 5px;
+  width: 80.5px;
+  height: 28px;
+  position: relative;
+  top: 2px;
+  left: 2px;
+  border-radius: 34px;
+  transition: 0.25s cubic-bezier(0, 0, 0, 1);
+}
+
+.option1:last-child {
+  margin-right: 4px;
+}
+
+.option1:hover {
+  background-color: var(--secondary-color);
+}
+
+.option1:hover .span {
+  color: var(--font-color-light);
+}
+
+.input1 {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  appearance: none;
+  cursor: pointer;
+}
+
+.btn1 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.span1 {
+  color: var(--font-color-dark);
+}
+
+.input1:checked + .btn1 {
+  background-color: var(--main-color);
+  transition: 0.2s cubic-bezier(0, 0, 0, 1);
+}
+
+.input1:checked + .btn1 .span1 {
+  color: var(--font-color-light);
+  transition: 0.25s cubic-bezier(0, 0, 0, 1);
+}
+
+/* From Uiverse.io by Galahhad */ 
+.switch {
+  /* switch */
+  --switch-width: 46px;
+  --switch-height: 24px;
+  --switch-bg: rgb(131, 131, 131);
+  --switch-checked-bg: rgb(0, 218, 80);
+  --switch-offset: calc((var(--switch-height) - var(--circle-diameter)) / 2);
+  --switch-transition: all .2s cubic-bezier(0.27, 0.2, 0.25, 1.51);
+  /* circle */
+  --circle-diameter: 18px;
+  --circle-bg: #fff;
+  --circle-shadow: 1px 1px 2px rgba(146, 146, 146, 0.45);
+  --circle-checked-shadow: -1px 1px 2px rgba(163, 163, 163, 0.45);
+  --circle-transition: var(--switch-transition);
+  /* icon */
+  --icon-transition: all .2s cubic-bezier(0.27, 0.2, 0.25, 1.51);
+  --icon-cross-color: var(--switch-bg);
+  --icon-cross-size: 6px;
+  --icon-checkmark-color: var(--switch-checked-bg);
+  --icon-checkmark-size: 10px;
+  /* effect line */
+  --effect-width: calc(var(--circle-diameter) / 2);
+  --effect-height: calc(var(--effect-width) / 2 - 1px);
+  --effect-bg: var(--circle-bg);
+  --effect-border-radius: 1px;
+  --effect-transition: all .2s ease-in-out;
+}
+
+.switch input {
+  display: none;
+}
+
+.switch {
+  display: inline-block;
+}
+
+.switch svg {
+  -webkit-transition: var(--icon-transition);
+  -o-transition: var(--icon-transition);
+  transition: var(--icon-transition);
+  position: absolute;
+  height: auto;
+}
+
+.switch .checkmark {
+  width: var(--icon-checkmark-size);
+  color: var(--icon-checkmark-color);
+  -webkit-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+}
+
+.switch .cross {
+  width: var(--icon-cross-size);
+  color: var(--icon-cross-color);
+}
+
+.slider {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: var(--switch-width);
+  height: var(--switch-height);
+  background: var(--switch-bg);
+  border-radius: 999px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  -webkit-transition: var(--switch-transition);
+  -o-transition: var(--switch-transition);
+  transition: var(--switch-transition);
+  cursor: pointer;
+}
+
+.circle {
+  width: var(--circle-diameter);
+  height: var(--circle-diameter);
+  background: var(--circle-bg);
+  border-radius: inherit;
+  -webkit-box-shadow: var(--circle-shadow);
+  box-shadow: var(--circle-shadow);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-transition: var(--circle-transition);
+  -o-transition: var(--circle-transition);
+  transition: var(--circle-transition);
+  z-index: 1;
+  position: absolute;
+  left: var(--switch-offset);
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  width: var(--effect-width);
+  height: var(--effect-height);
+  left: calc(var(--switch-offset) + (var(--effect-width) / 2));
+  background: var(--effect-bg);
+  border-radius: var(--effect-border-radius);
+  -webkit-transition: var(--effect-transition);
+  -o-transition: var(--effect-transition);
+  transition: var(--effect-transition);
+}
+
+/* actions */
+
+.switch input:checked+.slider {
+  background: var(--switch-checked-bg);
+}
+
+.switch input:checked+.slider .checkmark {
+  -webkit-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+}
+
+.switch input:checked+.slider .cross {
+  -webkit-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+}
+
+.switch input:checked+.slider::before {
+  left: calc(100% - var(--effect-width) - (var(--effect-width) / 2) - var(--switch-offset));
+}
+
+.switch input:checked+.slider .circle {
+  left: calc(100% - var(--circle-diameter) - var(--switch-offset));
+  -webkit-box-shadow: var(--circle-checked-shadow);
+  box-shadow: var(--circle-checked-shadow);
+}
+
+
+/* From Uiverse.io by marcelodolza */ 
+.container123 {
+  width: 100%;
+  height: 100%;
+  --s: 100px; /* control the size */
+  --c1: #f8b195;
+  --c2: #355c7d;
+
+  --_g: var(--c2) 4% 14%, var(--c1) 14% 24%, var(--c2) 22% 34%,
+    var(--c1) 34% 44%, var(--c2) 44% 56%, var(--c1) 56% 66%, var(--c2) 66% 76%,
+    var(--c1) 76% 86%, var(--c2) 86% 96%;
+  background: radial-gradient(
+      100% 100% at 100% 0,
+      var(--c1) 4%,
+      var(--_g),
+      #0008 96%,
+      #0000
+    ),
+    radial-gradient(
+        100% 100% at 0 100%,
+        #0000,
+        #0008 4%,
+        var(--_g),
+        var(--c1) 96%
+      )
+      var(--c1);
+  background-size: var(--s) var(--s);
+}
+
+
+
+.container321 {
+  background:
+    radial-gradient(
+        25px at calc(100% + calc(25px * 0.866)) 50%,
+        #762b52 99%,
+        transparent 101%
+      )
+      0 calc(-5 * 25px / 2),
+    radial-gradient(
+        25px at calc(100% + calc(25px * 0.866)) 50%,
+        #762b52 99%,
+        transparent 101%
+      )
+      calc(-2 * calc(25px * 0.866)) calc(25px / 2),
+    radial-gradient(25px at 100% 50%, #d36164 99%, transparent 101%) 0
+      calc(-2 * 25px),
+    radial-gradient(25px, #762b52 99%, transparent 101%) calc(25px * 0.866)
+      calc(-5 * 25px / 2),
+    radial-gradient(25px, #d36164 99%, transparent 101%) calc(25px * 0.866)
+      calc(5 * 25px / 2),
+    radial-gradient(25px at 100% 100%, #762b52 99%, transparent 101%) 0
+      calc(-1 * 25px),
+    radial-gradient(25px at 0% 50%, #762b52 99%, transparent 101%) 0
+      calc(-4 * 25px),
+    radial-gradient(25px, #d36164 99%, transparent 101%)
+      calc(-1 * calc(25px * 0.866)) calc(-7 * 25px / 2),
+    radial-gradient(25px, #762b52 99%, transparent 101%)
+      calc(-1 * calc(25px * 0.866)) calc(-5 * 25px / 2),
+    radial-gradient(25px at 100% 50%, #d36164 99%, transparent 101%)
+      calc(-2 * calc(25px * 0.866)) 25px,
+    radial-gradient(25px, #762b52 99%, transparent 101%)
+      calc(-1 * calc(25px * 0.866)) calc(25px / 2),
+    radial-gradient(25px, #d36164 99%, transparent 101%)
+      calc(-1 * calc(25px * 0.866)) calc(25px / -2),
+    radial-gradient(25px, #762b52 99%, transparent 101%) 0 calc(-1 * 25px),
+    radial-gradient(25px, #d36164 99%, transparent 101%) calc(25px * 0.866)
+      calc(25px / -2),
+    radial-gradient(25px, #762b52 99%, transparent 101%) calc(25px * 0.866)
+      calc(25px / 2) #d36164;
+  background-size: calc(4 * calc(25px * 0.866)) calc(6 * 25px);
+}
+
+
+/**/
+/* From Uiverse.io by stephakayyy */ 
+/* From Uiverse.io by mobinkakei */ 
+
+
+.loader3 {
+  width: 48px;
+  height: 48px;
+  margin: auto;
+  position: relative;
+}
+
+.loader3:before {
+  content: '';
+  width: 48px;
+  height: 5px;
+  background: #f0808050;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  border-radius: 50%;
+  animation: shadow324 0.5s linear infinite;
+}
+
+.loader3:after {
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: #f08080;
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 4px;
+  animation: jump7456 0.5s linear infinite;
+}
+
+@keyframes jump7456 {
+  15% {
+    border-bottom-right-radius: 3px;
+  }
+
+  25% {
+    transform: translateY(9px) rotate(22.5deg);
+  }
+
+  50% {
+    transform: translateY(18px) scale(1, .9) rotate(45deg);
+    border-bottom-right-radius: 40px;
+  }
+
+  75% {
+    transform: translateY(9px) rotate(67.5deg);
+  }
+
+  100% {
+    transform: translateY(0) rotate(90deg);
+  }
+}
+
+@keyframes shadow324 {
+
+  0%,
+    100% {
+    transform: scale(1, 1);
+  }
+
+  50% {
+    transform: scale(1.2, 1);
+  }
+}
+
+
+
+/**/
+.container007 {
+  background: linear-gradient(
+      30deg,
+      #111111 12%,
+      transparent 12.5%,
+      transparent 87%,
+      #111111 87.5%,
+      #111111
+    ),
+    linear-gradient(
+      150deg,
+      #111111 12%,
+      transparent 12.5%,
+      transparent 87%,
+      #111111 87.5%,
+      #111111
+    ),
+    linear-gradient(
+      30deg,
+      #111111 12%,
+      transparent 12.5%,
+      transparent 87%,
+      #111111 87.5%,
+      #111111
+    ),
+    linear-gradient(
+      150deg,
+      #111111 12%,
+      transparent 12.5%,
+      transparent 87%,
+      #111111 87.5%,
+      #111111
+    ),
+    linear-gradient(
+      60deg,
+      #77777777 25%,
+      transparent 25.5%,
+      transparent 75%,
+      #77777777 75%,
+      #77777777
+    ),
+    linear-gradient(
+      60deg,
+      #77777777 25%,
+      transparent 25.5%,
+      transparent 75%,
+      #77777777 75%,
+      #77777777
+    );
+  background-position:
+    0 0,
+    0 0,
+    40px 70px,
+    40px 70px,
+    0 0,
+    40px 70px;
+  background-color: #000000;
+  background-size: 80px 140px;
+  box-shadow: inset 0 0 100px rgba(255, 215, 0, 0.1);
+}
+
+.container008 {
+  --s: 150px;
+  --c1: #282c34;
+  --c2: #3e4149;
+  --c3: #525762;
+  --c4: #ff6384;
+  --c5: #36a2eb;
+  --c6: #4bc0c0;
+  --c7: #ffcc29;
+  --c8: #8e8f91;
+  --c9: #626262;
+
+  background: repeating-conic-gradient(
+        from 30deg,
+        #0000 0 120deg,
+        var(--c3) 0 180deg
+      )
+      calc(0.5 * var(--s)) calc(0.5 * var(--s) * 0.577),
+    repeating-conic-gradient(
+      from 30deg,
+      var(--c1) 0 45deg,
+      var(--c2) 0 90deg,
+      var(--c3) 0 135deg,
+      var(--c4) 0 180deg,
+      var(--c5) 0 225deg,
+      var(--c6) 0 270deg,
+      var(--c7) 0 315deg,
+      var(--c8) 0 360deg,
+      var(--c9) 0 405deg
+    );
+  background-size: var(--s) calc(var(--s) * 0.577);
+}
