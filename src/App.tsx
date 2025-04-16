@@ -12,7 +12,7 @@ function App() {
   return (
     <>
       <title>Swipe Swap Read</title>
-      <BrowserRouter basename="/ASD"> 
+      <BrowserRouter basename="/BookSwap-React/"> 
         <Routes>
           <Route path='' element={<AAth><DashBoard/></AAth>}></Route>
           <Route path='/login' element={<Login/>}></Route>
