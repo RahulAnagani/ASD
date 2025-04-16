@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://RahulAnagani.github.io/ASD",
+  "homepage": "https://RahulAnagani.github.io/BookSwap-React",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
