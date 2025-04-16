@@ -35,9 +35,10 @@ const Request: React.FC<Request> = ({
   };
 
   return (
-    <div className="cursor-pointer flex flex-col border-b border-gray-300">
-      <div onClick={()=>setIsExpanded(!isExpanded)}
-        className={`flex justify-center items-center p-1 transition-all duration-300 ${
+    <div className="flex flex-col border-b border-gray-300">
+      <div 
+        onClick={()=>setIsExpanded(!isExpanded)}
+        className={`flex justify-center items-center p-1 cursor-pointer transition-all duration-300 ${
           isExpanded ? "border-b-0" : "h-[10dvh]"
         }`}
       >
@@ -99,7 +100,7 @@ const Request: React.FC<Request> = ({
         <div className="w-[20%] flex justify-around items-center">
           <span className="text-xs">{new Date(time).toLocaleString()}</span>
           <MdExpandMore
-            className={`cursor-pointer bg-gray-300 dark:text-black text-bold rounded-full  transform transition-transform duration-300 ${
+            className={`cursor-pointer bg-gray-300 dark:text-black text-bold rounded-full transform transition-transform duration-300 ${
               isExpanded ? "rotate-180" : ""
             }`}
             onClick={() => setIsExpanded(!isExpanded)}
@@ -108,63 +109,100 @@ const Request: React.FC<Request> = ({
       </div>
 
       {isExpanded && (
-        <div className="dark:bg-black cursor-auto p-4 text-sm rounded-b-md">
-          <div className="flex flex-col md:flex-row md:gap-16">
-            <div className="mb-2">
-              <h2 className="font-bold mb-1">To Book:</h2>
-              <p className="flex">📖<TooltipTitle
-            title={toBook.title}
-            author={toBook.author}
-            genre={toBook.genre}
-          /></p>
-              <p>✍️ Author: {toBook.author}</p>
-              <p>📚 Genre: {toBook.genre}</p>
+        <div className="dark:bg-slate-900 bg-gray-50 cursor-default p-6 text-sm rounded-b-md shadow-inner">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="space-y-2">
+              <h2 className="text-base font-semibold border-b pb-2 border-gray-300 dark:border-gray-700 mb-3">Request Details</h2>
+              <div className="flex items-center">
+                <span className="font-medium w-24">Status:</span>
+                <span className={`py-1 px-2 rounded-full text-xs font-medium ${
+                  status === "Pending" ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100" :
+                  status === "Accepted" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100" :
+                  "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100"
+                }`}>
+                  {status}
+                </span>
+              </div>
+              <div className="flex items-center">
+                <span className="font-medium w-24">Type:</span>
+                <span>{type === "sent" ? "Outgoing" : "Incoming"}</span>
+              </div>
+              <div className="flex items-center">
+                <span className="font-medium w-24">Date:</span>
+                <span>{new Date(time).toLocaleDateString()}</span>
+              </div>
+              <div className="flex items-center">
+                <span className="font-medium w-24">Time:</span>
+                <span>{new Date(time).toLocaleTimeString()}</span>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <h2 className="text-base font-semibold border-b pb-2 border-gray-300 dark:border-gray-700 mb-3">Requested Book</h2>
+              <div className="flex items-center">
+                <span className="font-medium w-24">Title:</span>
+                <TooltipTitle
+                  title={toBook.title}
+                  author={toBook.author}
+                  genre={toBook.genre}
+                />
+              </div>
+              <div className="flex items-center">
+                <span className="font-medium w-24">Author:</span>
+                <span>{toBook.author}</span>
+              </div>
+              <div className="flex items-center">
+                <span className="font-medium w-24">Genre:</span>
+                <span className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100 px-2 py-1 rounded-md text-xs">{toBook.genre}</span>
+              </div>
             </div>
 
             {requestType === "swap" && (
-              <div className="mb-2">
-                <h2 className="font-bold mb-1">From Book:</h2>
-                <p className="flex">📖 <TooltipTitle
-                title={fromBook.title}
-                author={fromBook.author}
-                genre={fromBook.genre}
-              /></p>
-                <p>✍️ Author: {fromBook.author}</p>
-                <p>📚 Genre: {fromBook.genre}</p>
+              <div className="space-y-2">
+                <h2 className="text-base font-semibold border-b pb-2 border-gray-300 dark:border-gray-700 mb-3">Offered Book</h2>
+                <div className="flex items-center">
+                  <span className="font-medium w-24">Title:</span>
+                  <TooltipTitle
+                    title={fromBook.title}
+                    author={fromBook.author}
+                    genre={fromBook.genre}
+                  />
+                </div>
+                <div className="flex items-center">
+                  <span className="font-medium w-24">Author:</span>
+                  <span>{fromBook.author}</span>
+                </div>
+                <div className="flex items-center">
+                  <span className="font-medium w-24">Genre:</span>
+                  <span className="bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-100 px-2 py-1 rounded-md text-xs">{fromBook.genre}</span>
+                </div>
               </div>
             )}
-
-            <div className="mb-2">
-              <h2 className="font-bold mb-1">Request Info:</h2>
-              <p>📤 Type: {type}</p>
-              <p>📌 Status: {status}</p>
-              <p>🕒 Sent at: {new Date(time).toLocaleString()}</p>
-            </div>
           </div>
 
-          <div className="mt-4 flex gap-3 justify-start">
-            {status === "Pending" && requestType === "swap" && (
-              <button
-                className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-700 transition-colors"
-                onClick={() => handleAction("Accept")}
-              >
-                Accept
-              </button>
-            )}
-            {status === "Pending" && requestType === "swap" && (
-              <button
-                className="bg-gray-500 text-white p-2 rounded-md hover:bg-gray-700 transition-colors"
-                onClick={() => handleAction("Ignore")}
-              >
-                Ignore
-              </button>
+          <div className="mt-6 flex gap-3 justify-end border-t pt-4 border-gray-300 dark:border-gray-700">
+            {status === "Pending" && (
+              <>
+                <button
+                  className="bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 px-4 py-2 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors font-medium"
+                  onClick={() => handleAction("Ignore")}
+                >
+                  Decline
+                </button>
+                <button
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors font-medium"
+                  onClick={() => handleAction("Accept")}
+                >
+                  Accept
+                </button>
+              </>
             )}
             {(status === "Accepted" || status === "Rejected") && (
               <button
-                className="bg-red-500 text-white p-2 rounded-md hover:bg-red-700 transition-colors"
+                className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors font-medium"
                 onClick={() => handleAction("Cancel")}
               >
-                Cancel
+                Cancel Request
               </button>
             )}
           </div>
