@@ -78,7 +78,7 @@ const NavBar: React.FC<{ handler: () => void }> = ({ handler }) => {
             <ul className="w-full h-full flex">
                 <div className="w-[20%] flex justify-start items-center">
                     <Link to={"/home"}>
-                        <img className="h-13 w-13 hover:cursor-pointer dark:invert" src="./book-svgrepo-com.svg" alt="Logo" />
+                        <img className="h-13 w-13 hover:cursor-pointer dark:invert" src="/ASD/book-svgrepo-com.svg" alt="Logo" />
                     </Link>
                 </div>
                 <div ref={searchRef} className="w-[50%] flex flex-col relative justify-center items-center ">
