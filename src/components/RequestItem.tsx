@@ -3,6 +3,7 @@ import { MdOutlineSwapVerticalCircle, MdExpandMore } from "react-icons/md";
 import TooltipTitle from "./Tool";
 import { BiSolidPurchaseTagAlt } from "react-icons/bi";
 
+
 type book = {
   title: string;
   author: string;
@@ -33,12 +34,13 @@ const Request: React.FC<Request> = ({
   const handleAction = (action: string) => {
     console.log(`Action: ${action} on request from @${username}`);
   };
+  
+
 
   return (
     <div className="flex flex-col border-b border-gray-300">
       <div 
-        onClick={()=>setIsExpanded(!isExpanded)}
-        className={`flex justify-center items-center p-1 cursor-pointer transition-all duration-300 ${
+        className={`flex justify-center items-center p-2 transition-all duration-300 ${
           isExpanded ? "border-b-0" : "h-[10dvh]"
         }`}
       >
@@ -94,17 +96,76 @@ const Request: React.FC<Request> = ({
         </div>
 
         <div className="w-[10%] flex justify-start items-center">
-          <h1>{status}</h1>
+          <span className={`py-1 px-2 rounded-full text-xs font-medium ${
+            status.toLowerCase() === "pending" ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100" :
+            status.toLowerCase() === "accepted" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100" :
+            "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100"
+          }`}>
+            {status}
+          </span>
         </div>
 
         <div className="w-[20%] flex justify-around items-center">
-          <span className="text-xs">{new Date(time).toLocaleString()}</span>
-          <MdExpandMore
-            className={`cursor-pointer bg-gray-300 dark:text-black text-bold rounded-full transform transition-transform duration-300 ${
-              isExpanded ? "rotate-180" : ""
-            }`}
-            onClick={() => setIsExpanded(!isExpanded)}
-          />
+          {type === "received" && status.toLowerCase() === "pending" ? (
+            <div className="flex gap-2">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAction("Accept");
+                }}
+                className="px-3 py-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-md shadow hover:shadow-md transition-all duration-200 text-sm font-medium"
+                title="Approve Request"
+              >
+                Accept
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAction("Ignore");
+                }}
+                className="px-3 py-1 bg-white border border-gray-300 text-gray-700 rounded-md shadow hover:bg-gray-50 transition-all duration-200 text-sm font-medium dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-600"
+                title="Decline Request"
+              >
+                Ignore
+              </button>
+              <MdExpandMore
+                className={`cursor-pointer bg-gray-300 dark:text-black text-bold rounded-full transform transition-transform duration-300 ${
+                  isExpanded ? "rotate-180" : ""
+                }`}
+                onClick={() => setIsExpanded(!isExpanded)}
+              />
+            </div>
+          ) : type === "sent" ? (
+            <div className="flex items-center gap-2">
+              <span className="text-xs">{new Date(time).toLocaleString()}</span>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAction("Cancel");
+                }}
+                className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md shadow hover:shadow-md transition-all duration-200 text-sm font-medium"
+                title="Cancel Request"
+              >
+                Cancel
+              </button>
+              <MdExpandMore
+                className={`cursor-pointer bg-gray-300 dark:text-black text-bold rounded-full transform transition-transform duration-300 ${
+                  isExpanded ? "rotate-180" : ""
+                }`}
+                onClick={() => setIsExpanded(!isExpanded)}
+              />
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <span className="text-xs">{new Date(time).toLocaleString()}</span>
+              <MdExpandMore
+                className={`cursor-pointer bg-gray-300 dark:text-black text-bold rounded-full transform transition-transform duration-300 ${
+                  isExpanded ? "rotate-180" : ""
+                }`}
+                onClick={() => setIsExpanded(!isExpanded)}
+              />
+            </div>
+          )}
         </div>
       </div>
 
@@ -116,8 +177,8 @@ const Request: React.FC<Request> = ({
               <div className="flex items-center">
                 <span className="font-medium w-24">Status:</span>
                 <span className={`py-1 px-2 rounded-full text-xs font-medium ${
-                  status === "Pending" ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100" :
-                  status === "Accepted" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100" :
+                  status.toLowerCase() === "pending" ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100" :
+                  status.toLowerCase() === "accepted" ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100" :
                   "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100"
                 }`}>
                   {status}
@@ -180,8 +241,10 @@ const Request: React.FC<Request> = ({
             )}
           </div>
 
+          
+
           <div className="mt-6 flex gap-3 justify-end border-t pt-4 border-gray-300 dark:border-gray-700">
-            {status === "Pending" && (
+            {type === "received" && status.toLowerCase() === "pending" && (
               <>
                 <button
                   className="bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 px-4 py-2 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors font-medium"
@@ -197,7 +260,7 @@ const Request: React.FC<Request> = ({
                 </button>
               </>
             )}
-            {(status === "Accepted" || status === "Rejected") && (
+            {type === "sent" && (
               <button
                 className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition-colors font-medium"
                 onClick={() => handleAction("Cancel")}

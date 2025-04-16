@@ -48,7 +48,7 @@ const BookCard: React.FC<Props> = ({ cover, title, author,Okey }) => {
         )}
       </div>
 
-      <div className="h-[25%] w-full p-0 flex flex-col justify-center bg-gradient-to-b from-white to-gray-50 border-t border-gray-100">
+      <div className="h-[25%] w-full p-0 flex flex-col justify-center  bg-gradient-to-b from-white to-gray-50 border-t border-gray-100">
         <h1 
           className="font-bold text-gray-800 text-sm text-center line-clamp-2"
           title={title}

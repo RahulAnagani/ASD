@@ -1,4 +1,4 @@
-import { Book, MapPin, AlertCircle } from 'lucide-react';
+import { Book, MapPin, AlertCircle, X } from 'lucide-react';
 import { RootState } from '../store';
 import { useSelector } from 'react-redux';
 
@@ -28,7 +28,12 @@ interface user {
 
 type availability = availabilit[];
 
-const AVBox: React.FC<{availability: availability, bookName: string, handler:(a:string,b:string)=>void}> = ({availability, handler, bookName}) => {
+const AVBox: React.FC<{
+  availability: availability, 
+  bookName: string, 
+  handler: (a: string, b: string) => void,
+  onClose: () => void 
+}> = ({availability, handler, bookName, onClose}) => {
     const user = useSelector((store: RootState) => (store.user)) as user;
     
     const otherUsersBooks = availability.filter(item => item.owner.username !== user.username);
@@ -36,7 +41,15 @@ const AVBox: React.FC<{availability: availability, bookName: string, handler:(a:
     const hasAvailableBooks = otherUsersBooks.length > 0;
     console.log(hasAvailableBooks)
     return (
-        <div className="flex flex-wrap justify-center  bg-gray-300 rounded items-center w-[75%] h-[75%] gap-4">
+        <div className="relative flex flex-wrap justify-center bg-gray-300 rounded items-center w-[75%] h-[75%] gap-4">
+            <button 
+                onClick={onClose}
+                className="absolute cursor-pointer top-3 right-3 p-1 rounded-full bg-gray-200 hover:bg-gray-400 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                aria-label="Close"
+            >
+                <X size={20} className="text-gray-700" />
+            </button>
+            
             {hasAvailableBooks ? (
                 otherUsersBooks.map((item, index) => (
                     <div key={index} className="bg-white shadow-md rounded-lg p-4 w-64 border border-gray-200 hover:shadow-lg transition-shadow">

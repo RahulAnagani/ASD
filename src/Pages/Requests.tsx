@@ -96,7 +96,6 @@ const Requests = () => {
   }, [tab]);
 
   useEffect(() => {
-    // Initialize sidebar position
     if (sidebarRef.current) {
       gsap.set(sidebarRef.current, { x: "100%" });
     }
