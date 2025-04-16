@@ -78,7 +78,7 @@ const NavBar: React.FC<{ handler: () => void }> = ({ handler }) => {
             <ul className="w-full h-full flex">
                 <div className="w-[20%] flex justify-start items-center">
                     <Link to={"/home"}>
-                        <img className="h-13 w-13 hover:cursor-pointer dark:invert" src="/book-svgrepo-com.svg" alt="Logo" />
+                        <img className="h-13 w-13 hover:cursor-pointer dark:invert" src="./book-svgrepo-com.svg" alt="Logo" />
                     </Link>
                 </div>
                 <div ref={searchRef} className="w-[50%] flex flex-col relative justify-center items-center ">
@@ -111,7 +111,7 @@ const NavBar: React.FC<{ handler: () => void }> = ({ handler }) => {
                     </div>
                     <div className="cursor-pointer flex flex-col justify-between items-center">
                         <div onClick={handler} className="profile rounded-full flex-col bg-gray-300 p-1 flex justify-center items-center">
-                            <img className="h-8 w-8 hover:cursor-pointer" src="/person.svg" alt="Profile" />
+                            <img className="h-8 w-8 hover:cursor-pointer" src="./person.svg" alt="Profile" />
                         </div>
                     </div>
                 </div>
