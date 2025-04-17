@@ -186,12 +186,56 @@ const Explore = () => {
     },
     bookId: string
   }
+  type SwapRequest = {
+    _id: string,
+    fromUser: {
+        _id: string,
+        username: string
+    },
+    toUser: string,
+    fromBook: {
+        location: {
+            ltd: number,
+            lng: number
+        },
+        _id: string,
+        owner: string,
+        title: string,
+        author: string,
+        genre: string,
+        condition: string,
+        isAvailable: boolean,
+        imageUrl: string,
+        key: string,
+        __v: number
+    },
+    toBook: {
+        location: {
+            ltd: number,
+            lng: number
+        },
+        _id: string,
+        owner: string,
+        title: string,
+        author: string,
+        genre: string,
+        condition: string,
+        isAvailable: boolean,
+        imageUrl: string,
+        key: string,
+        __v: number
+    },
+    status: string,
+    type: string,
+    createdAt: string,
+    __v: number
+}
   
   const [availability, setAvailability] = useState<availabilit[]>([]);
   const [fetchAvailability, setFetchAvailability] = useState(false);
   const [avaPage, setAvaPage] = useState(false);
   const serverApi = import.meta.env.VITE_API_URL;
-  
+  const [existing,setExisting]=useState<SwapRequest[]>([]);
   useEffect(() => {
     if (avaPage) {
       const okey = title;
@@ -211,6 +255,7 @@ const Explore = () => {
           }
         }).then((res) => {
           setAvailability(res.data.availability);
+          setExisting(res.data.existingRequests);
           setFetchAvailability(false);
         })
         .catch(e => {
@@ -244,7 +289,7 @@ const Explore = () => {
           {fetchAvailability && <Loader1 />}
           {!fetchAvailability && (
             <div className="flex justify-center items-center w-full h-full">
-              <AVBox onClose={() => { setAvaPage(false) }} handler={handler} availability={availability} bookName={tit} />
+              <AVBox onClose={() => { setAvaPage(false) }} handler={handler} existingRequests={existing} availability={availability} bookName={tit} />
             </div>
           )}
         </div>

@@ -153,7 +153,7 @@ const FloatAdd:React.FC<{handle:()=>void,handleSucces:()=>void,handlerError:()=>
 }} className="bg-white dark:bg-gray-700 dark:border-gray-600 border relative border-gray-300 p-0 w-[75%] flex items-center justify-start gap-0 h-[75%] rounded" >
                     <>
                     <div className="w-[50%] h-full">
-                        <img src="./login1.jpg" className="w-full rounded h-full rounded-r-none object-cover"></img>
+                        <img src="/BookSwap-React/login1.jpg" className="w-full rounded h-full rounded-r-none object-cover"></img>
                     </div>
                     <ImCross onClick={handle} className="absolute z-100 right-1 invert top-1 m-4 cursor-pointer hover:fill-red-500 hover:invert-0"/>
                     <div className="w-[50%] h-full flex flex-col gap-5 relative p-5  bg-gradient-to-br from-[#1e3c72] via-[#2a5298] to-[#6dd5ed]  items-center">
@@ -177,7 +177,7 @@ const FloatAdd:React.FC<{handle:()=>void,handleSucces:()=>void,handlerError:()=>
                     </div>
                     </div>}
                     {step===2&&<>
-                            <Book genHanlder={genHanlder} title={selectedBook.title} cover={selectedBook.cover??String(selectedBook.coverId)} author={selectedBook.author} badge=""></Book>
+                            <Book okeyPath={selectedBook.Okey} genHanlder={genHanlder} title={selectedBook.title} cover={selectedBook.cover??String(selectedBook.coverId)} author={selectedBook.author} badge=""></Book>
                             <div className="w-[50%] mt-3 flex flex-col gap-2 items-center justify-around">
                                 {
                                     tempFlag&&<>

@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
+
 /* From Uiverse.io by rishichawda */ 
 /* The switch - the box around the slider */
 /* From Uiverse.io by alexruix */ 
