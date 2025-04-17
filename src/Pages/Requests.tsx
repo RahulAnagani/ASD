@@ -6,6 +6,8 @@ import { FaPaperPlane } from "react-icons/fa";
 import { CiInboxIn } from "react-icons/ci";
 import SideBar from "../components/SideBar";
 import { gsap } from "gsap";
+import { MdClose } from "react-icons/md";
+import Spinnit from "../components/Spinnit";
 
 type Book = {
   _id: string;
@@ -51,8 +53,9 @@ const Requests = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  const contentAreaRef = useRef<HTMLDivElement>(null);
+  const mainContentRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchRequests = async () => {
@@ -96,32 +99,38 @@ const Requests = () => {
   }, [tab]);
 
   useEffect(() => {
-    if (sidebarRef.current) {
-      gsap.set(sidebarRef.current, { x: "100%" });
-    }
-    if (overlayRef.current) {
-      gsap.set(overlayRef.current, { autoAlpha: 0 });
-    }
-  }, []);
-
-  useEffect(() => {
-    // Animate sidebar when sidebarOpen changes
-    if (sidebarRef.current) {
-      gsap.to(sidebarRef.current, {
-        duration: 0.5,
-        x: sidebarOpen ? "0%" : "100%",
-        ease: "power3.inOut"
+    // Animate main content width when sidebar state changes
+    if (mainContentRef.current) {
+      gsap.to(mainContentRef.current, {
+        duration: 0.3,
+        width: sidebarOpen ? "75%" : "100%",
+        ease: "power2.out"
       });
     }
 
-    // Animate overlay
-    if (overlayRef.current) {
-      gsap.to(overlayRef.current, {
-        duration: 0.5,
-        autoAlpha: sidebarOpen ? 0.5 : 0,
-        display: sidebarOpen ? "block" : "none",
-        ease: "power3.inOut"
-      });
+    // Animate sidebar
+    if (sidebarRef.current) {
+      if (sidebarOpen) {
+        gsap.to(sidebarRef.current, {
+          duration: 0.3,
+          width: "25%",
+          opacity: 1,
+          display: "block",
+          ease: "power2.out"
+        });
+      } else {
+        gsap.to(sidebarRef.current, {
+          duration: 0.2,
+          width: "0%",
+          opacity: 0,
+          onComplete: () => {
+            if (sidebarRef.current) {
+              sidebarRef.current.style.display = "none";
+            }
+          },
+          ease: "power2.in"
+        });
+      }
     }
   }, [sidebarOpen]);
 
@@ -132,136 +141,149 @@ const Requests = () => {
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
-
+  const [fetching,setFetching]=useState(false);
   return (
-    <div className="min-h-screen w-screen dark-mode relative overflow-x-hidden">
-      {/* Overlay for when sidebar is open */}
-      <div 
-        ref={overlayRef}
-        className="fixed inset-0 bg-black z-10"
-        onClick={() => setSidebarOpen(false)}
-      ></div>
-      
-      <div className="h-[15%] p-4 w-full">
-        <NavBar handler={toggleSidebar} />
-      </div>
-      
-      <div className="w-full p-4">
-        <h1 className="font-bold text-2xl">Requests</h1>
-        <div className="w-full">
-          <div className="flex gap-2 p-2">
-            <button
-              onClick={() => handleTabChange("sent")}
-              className={`dark:bg-gray-800 p-4 rounded ${
-                tab === "sent"
-                  ? "bg-black text-white shadow-md shadow-gray-700"
-                  : "bg-gray-300"
-              }`}
-            >
-              <FaPaperPlane className="focus:invert" />
-            </button>
-            <button
-              onClick={() => handleTabChange("received")}
-              className={`dark:bg-gray-800 p-4 rounded ${
-                tab === "received"
-                  ? "bg-black text-white shadow-md shadow-gray-700"
-                  : "bg-gray-300"
-              }`}
-            >
-              <CiInboxIn />
-            </button>
-          </div>
-        </div>
-        
-        <div className="w-full min-h-[50dvh] flex flex-col gap-3 p-1">
-          <h1 className="font-bold mt-3">{tab.toUpperCase()}</h1>
-          <div
-            className={`flex justify-center rounded items-center p-1 transition-all duration-300 h-[10dvh]`}
-          >
-            <div className="w-[10%] flex justify-start items-center">
-              <h1 className="font-bold text-sm text-gray-500 dark:text-gray-500">
-                Profile
-              </h1>
-            </div>
-
-            <div className="w-[20%] flex justify-start items-center">
-              <h1 className="font-bold text-sm text-gray-500 dark:text-gray-500">
-                Username
-              </h1>
-            </div>
-
-            <div className="w-[20%] flex relative justify-start items-center">
-              <h1 className="font-bold text-sm text-gray-500 dark:text-gray-500">
-                Book Title
-              </h1>
-            </div>
-
-            <div className="w-[20%] flex flex-col justify-start items-center">
-              <h1 className="font-bold text-sm text-gray-500 dark:text-gray-500">
-                Request Type
-              </h1>
-            </div>
-
-            <div className="w-[10%] flex justify-start items-center">
-              <h1 className="font-bold text-sm text-gray-500 dark:text-gray-500">
-                Status
-              </h1>
-            </div>
-
-            <div className="w-[20%] flex justify-around items-center">
-              <h1 className="font-bold text-sm text-gray-500 dark:text-gray-500">
-                Time of Request
-              </h1>
-            </div>
-          </div>
-
-          {loading ? (
-            <div className="flex justify-center items-center h-40">
-              <p>Loading requests...</p>
-            </div>
-          ) : error ? (
-            <div className="flex justify-center items-center h-40 text-red-500">
-              <p>{error}</p>
-            </div>
-          ) : requests.length === 0 ? (
-            <div className="flex justify-center items-center h-40">
-              <p>No {tab} requests found</p>
-            </div>
-          ) : (
-            requests.map((req) => (
-              <Request
-                key={req._id}
-                username={
-                  tab === "sent"
-                    ? (req.toUser as User)?.username || (req.toUser as string)
-                    : req.fromUser.username
-                }
-                status={req.status}
-                fromBook={req.fromBook || { title: "", author: "", genre: "" }}
-                toBook={req.toBook}
-                time={req.createdAt}
-                type={tab}
-                requestType={req.type.toLowerCase() as "swap" | "buy"}
-              />
-            ))
-          )}
+    <div className="min-h-screen relative w-screen dark-mode flex flex-col overflow-hidden">
+      {fetching&&<Spinnit></Spinnit>}
+      <div className="w-full">
+        <div className="h-[15%] p-4">
+          <NavBar handler={toggleSidebar} />
         </div>
       </div>
-
+      
       <div 
-        ref={sidebarRef}
-        className="fixed top-0 right-0 h-full w-64 bg-white dark:bg-gray-800 shadow-lg p-4 z-20"
+        ref={contentAreaRef}
+        className="flex flex-1 w-full overflow-hidden"
       >
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="font-bold text-xl">Menu</h2>
-          <button 
-            onClick={() => setSidebarOpen(false)}
-            className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
-          >
-            ✕
-          </button>
+        {/* Main Content */}
+        <div 
+          ref={mainContentRef}
+          className="flex-1 overflow-y-auto transition-all duration-300 ease-in-out"
+          style={{ width: sidebarOpen ? "75%" : "100%" }}
+        >
+          <div className="p-4">
+            <h1 className="font-bold text-2xl mb-4">Requests</h1>
+            
+            <div className="flex gap-2 p-2 mb-4 border-b dark:border-gray-700">
+              <button
+                onClick={() => handleTabChange("sent")}
+                className={`flex cursor-pointer items-center gap-2 py-2 px-4 rounded-t transition-all ${
+                  tab === "sent"
+                    ? "bg-black text-white dark:bg-gray-700 shadow-md"
+                    : "bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700"
+                }`}
+              >
+                <FaPaperPlane size={16} /> 
+                <span>Sent</span>
+              </button>
+              <button
+                onClick={() => handleTabChange("received")}
+                className={`flex cursor-pointer items-center gap-2 py-2 px-4 rounded-t transition-all ${
+                  tab === "received"
+                    ? "bg-black text-white dark:bg-gray-700 shadow-md"
+                    : "bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700"
+                }`}
+              >
+                <CiInboxIn size={18} /> 
+                <span>Received</span>
+              </button>
+            </div>
+            
+            {/* Request Table */}
+            <div className="w-full min-h-[50dvh] flex flex-col gap-3">
+              <div
+                className="flex justify-center rounded items-center p-1 transition-all duration-300 h-[10dvh] bg-gray-100 dark:bg-gray-800"
+              >
+                <div className="w-[10%] flex justify-start items-center">
+                  <h1 className="font-bold text-sm text-gray-500 dark:text-gray-400">
+                    Profile
+                  </h1>
+                </div>
+
+                <div className="w-[20%] flex justify-start items-center">
+                  <h1 className="font-bold text-sm text-gray-500 dark:text-gray-400">
+                    Username
+                  </h1>
+                </div>
+
+                <div className="w-[20%] flex relative justify-start items-center">
+                  <h1 className="font-bold text-sm text-gray-500 dark:text-gray-400">
+                    Book Title
+                  </h1>
+                </div>
+
+                <div className="w-[20%] flex flex-col justify-start items-center">
+                  <h1 className="font-bold text-sm text-gray-500 dark:text-gray-400">
+                    Request Type
+                  </h1>
+                </div>
+
+                <div className="w-[10%] flex justify-start items-center">
+                  <h1 className="font-bold text-sm text-gray-500 dark:text-gray-400">
+                    Status
+                  </h1>
+                </div>
+
+                <div className="w-[20%] flex justify-around items-center">
+                  <h1 className="font-bold text-sm text-gray-500 dark:text-gray-400">
+                    Time of Request
+                  </h1>
+                </div>
+              </div>
+
+              {loading ? (
+                <div className="flex justify-center items-center h-40">
+                  <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-gray-900 dark:border-gray-100"></div>
+                </div>
+              ) : error ? (
+                <div className="flex justify-center items-center h-40 text-red-500 p-4 bg-red-50 dark:bg-red-900/20 rounded-md">
+                  <p>{error}</p>
+                </div>
+              ) : requests.length === 0 ? (
+                <div className="flex flex-col justify-center items-center h-40 bg-gray-50 dark:bg-gray-800/50 rounded-md">
+                  <p className="text-gray-500 dark:text-gray-400 mb-2">No {tab} requests found</p>
+                  {tab === "sent" ? (
+                    <p className="text-sm text-gray-400">Your outgoing requests will appear here</p>
+                  ) : (
+                    <p className="text-sm text-gray-400">Incoming requests from other users will appear here</p>
+                  )}
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {requests.map((req) => (
+                    <Request
+                      handler={(val:boolean)=>{setFetching(val)}}
+                      key={req._id}
+                      id={req._id}
+                      username={
+                        tab === "sent"
+                          ? (req.toUser as User)?.username || (req.toUser as string)
+                          : req.fromUser.username
+                      }
+                      status={req.status as "received" | "pending" | "accepted" | "declined" | "canceled"}
+                      fromBook={req.fromBook || { title: "", author: "", genre: "" }}
+                      toBook={req.toBook}
+                      time={req.createdAt}
+                      type={tab}
+                      requestType={req.type.toLowerCase() as "swap" | "buy"}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-        <SideBar />
+
+        {/* Sidebar */}
+        <div 
+          ref={sidebarRef}
+          className="h-full overflow-y-auto shadow-md"
+          style={{ width: sidebarOpen ? "25%" : "0%", display: sidebarOpen ? "block" : "none" }}
+        >
+          <div className="p-4">
+            <SideBar />
+          </div>
+        </div>
       </div>
     </div>
   );

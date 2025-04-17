@@ -7,6 +7,7 @@ import AAth from './context/AAth'
 import Requests from './Pages/Requests'
 import Explore from './Pages/explore'
 import BookPage from './Pages/BookPage'
+import Spinnit from './components/Spinnit'
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         </Routes>
       </BrowserRouter>
     </>
+
   )
 }
 
