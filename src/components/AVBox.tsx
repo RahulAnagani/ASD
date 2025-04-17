@@ -83,7 +83,6 @@ const AVBox: React.FC<{
 }> = ({availability, handler, bookName, onClose, existingRequests = []}) => {
     const user = useSelector((store: RootState) => (store.user)) as user;
     const [loading, setLoading] = useState(true);
-    
     const otherUsersBooks = availability.filter(item => item.owner.username !== user.username);
     
     const hasAvailableBooks = otherUsersBooks.length > 0;
@@ -98,7 +97,7 @@ const AVBox: React.FC<{
             year: 'numeric' 
         });
     };
-    
+    loading
     return (
         <div className="relative flex flex-col bg-gray-300 rounded items-center w-4/5 h-4/5 p-6 overflow-auto">
             <button 
@@ -109,7 +108,6 @@ const AVBox: React.FC<{
                 <X size={20} className="text-gray-700" />
             </button>
             
-            {/* Existing requests section */}
             {hasExistingRequests && (
                 <div className="w-full mb-6">
                     <div className="flex items-center mb-4">
@@ -223,7 +221,6 @@ const AVBox: React.FC<{
                 </div>
             )}
             
-            {/* Separator if both sections are present */}
             {hasExistingRequests && hasAvailableBooks && (
                 <div className="w-full flex items-center my-4">
                     <div className="flex-1 border-t border-gray-300"></div>
@@ -232,7 +229,6 @@ const AVBox: React.FC<{
                 </div>
             )}
             
-            {/* Available books section */}
             <div className="w-full flex flex-wrap justify-center gap-4">
                 {hasAvailableBooks ? (
                     otherUsersBooks.map((item, index) => (
