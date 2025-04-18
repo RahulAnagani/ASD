@@ -5,7 +5,7 @@ import { MessageCircle, Search, ChevronLeft, Send, Check, CheckCheck, UserPlus, 
 import { socketContext } from '../context/Socket';
 import { RootState } from '../store';
 import { useSelector } from 'react-redux';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { doesChatExist, findExistingChat } from '../utils/chatHelpers';
 
 interface User {
@@ -62,7 +62,7 @@ interface Socket {
 }
 
 const MessagingComponent: React.FC<{}> = () => {
-  const location = useLocation();
+  // const location = useLocation();
   const navigate = useNavigate();
   const params = useParams<{ username?: string }>();
   const socketCtx = useContext(socketContext);
