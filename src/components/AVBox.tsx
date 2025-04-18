@@ -17,7 +17,7 @@ type availabilit = {
     bookId: string
 }
 
-interface user {
+export interface user {
     _id: string,
     email: string,
     username: string,

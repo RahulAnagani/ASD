@@ -6,7 +6,6 @@ import { FaPaperPlane } from "react-icons/fa";
 import { CiInboxIn } from "react-icons/ci";
 import SideBar from "../components/SideBar";
 import { gsap } from "gsap";
-import { MdClose } from "react-icons/md";
 import Spinnit from "../components/Spinnit";
 
 type Book = {
@@ -155,7 +154,6 @@ const Requests = () => {
         ref={contentAreaRef}
         className="flex flex-1 w-full overflow-hidden"
       >
-        {/* Main Content */}
         <div 
           ref={mainContentRef}
           className="flex-1 overflow-y-auto transition-all duration-300 ease-in-out"
@@ -189,7 +187,6 @@ const Requests = () => {
               </button>
             </div>
             
-            {/* Request Table */}
             <div className="w-full min-h-[50dvh] flex flex-col gap-3">
               <div
                 className="flex justify-center rounded items-center p-1 transition-all duration-300 h-[10dvh] bg-gray-100 dark:bg-gray-800"
@@ -274,7 +271,6 @@ const Requests = () => {
           </div>
         </div>
 
-        {/* Sidebar */}
         <div 
           ref={sidebarRef}
           className="h-full overflow-y-auto shadow-md"

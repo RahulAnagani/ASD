@@ -4,6 +4,7 @@ import TooltipTitle from "./Tool";
 import { BiSolidPurchaseTagAlt } from "react-icons/bi";
 import { MdDone, MdCancel } from "react-icons/md";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 type book = {
   title: string;
@@ -34,6 +35,7 @@ const Request: React.FC<Request> = ({
   id,
   handler
 }) => {
+  const nav=useNavigate();
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [currentStatus, setCurrentStatus] = useState<Request["status"]>(status);
   const serverApi=import.meta.env.VITE_API_URL;
@@ -157,7 +159,7 @@ const Request: React.FC<Request> = ({
           />
         </div>
 
-        <div className="w-[20%] flex justify-start items-center text-sm">
+        <div onClick={()=>nav(`/chat/${username}`)} className="w-[20%] flex justify-start items-center text-sm">
           <h1>
             @<span className="font-bold cursor-pointer">{username}</span>
           </h1>

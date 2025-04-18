@@ -1,5 +1,4 @@
 import FancySvg from "./FancySvg";
-import "./spin.css"
 const Spinnit=()=>{
     return (
         <>
