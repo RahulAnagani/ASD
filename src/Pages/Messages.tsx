@@ -7,6 +7,12 @@ import { RootState } from '../store';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { doesChatExist, findExistingChat } from '../utils/chatHelpers';
+import NavBar from "../components/NavBar";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import SideBar from "../components/SideBar";
 
 interface User {
   _id: string;
@@ -84,6 +90,32 @@ const MessagingComponent: React.FC<{}> = () => {
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const chatListLoadedRef = useRef<boolean>(false);
   const initialUrlProcessedRef = useRef<boolean>(false);
+  
+  // Add state for sidebar similar to Explore component
+  const [sideBar, setSideBar] = useState<boolean>(false);
+  const sideRef = useRef(null);
+  const mainContentRef = useRef(null);
+
+  // GSAP animation for sidebar
+  useGSAP(() => {
+    if (sideBar) {
+      gsap.to(sideRef.current, {
+        right: 0,
+        width: "25%",
+      });
+      gsap.to(mainContentRef.current, {
+        width: "75%",
+      });
+    } else {
+      gsap.to(sideRef.current, {
+        right: "-10%",
+        width: 0,
+      });
+      gsap.to(mainContentRef.current, {
+        width: "100%",
+      });
+    }
+  }, [sideBar]);
 
   useEffect(() => {
     const loadInitialData = async () => {
@@ -477,221 +509,244 @@ const MessagingComponent: React.FC<{}> = () => {
   );
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <div className={`bg-white w-full md:w-80 flex-shrink-0 border-r border-gray-200 ${selectedChat ? 'hidden md:block' : 'block'}`}>
-        <div className="p-4 border-b border-gray-200">
-          <h1 className="text-xl font-semibold text-gray-800">Messages</h1>
-          <div className="mt-4 relative">
-            <input
-              type="text"
-              placeholder="Search users..."
-              className="w-full p-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onFocus={() => setShowSearchResults(true)}
-            />
-            <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
-            
-            {showSearchResults && searchTerm.trim() !== "" && (
-              <div className="absolute z-10 mt-2 w-full bg-white rounded-lg shadow-lg border border-gray-200">
-                {searchResults.length > 0 ? (
-                  <>
-                    {searchResults.map((result) => {
-                      const isChatExisting = chatList.some(chat => 
-                        chat.user._id === result._id || 
-                        chat.user.username.toLowerCase() === result.username.toLowerCase()
-                      );
-                      return (
-                        <div
-                          key={result._id}
-                          className="flex items-center p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
-                          onClick={() => handleDirectChat(result)}
-                        >
-                          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-500 font-semibold">
-                            {result.username.charAt(0).toUpperCase()}
-                          </div>
-                          <div className="ml-3 flex-1">
-                            <div className="flex justify-between items-center">
-                              <h3 className="text-sm font-medium text-gray-800">{result.username}</h3>
-                              {isChatExisting ? (
-                                <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">Exists</span>
-                              ) : (
-                                <span className="text-xs text-blue-500 flex items-center">
-                                  <UserPlus size={14} className="mr-1" /> New chat
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </>
-                ) : (
-                  <div className="p-3 text-center text-gray-500 text-sm">
-                    No users found matching "{searchTerm}"
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="overflow-y-auto h-[calc(100vh-130px)]">
-          {loading && chatList.length === 0 ? (
-            <div className="flex justify-center items-center h-40">
-              <div className="animate-pulse text-gray-500">Loading conversations...</div>
-            </div>
-          ) : filteredChats.length === 0 ? (
-            <div className="text-center p-4 text-gray-500">
-              No conversations found
-            </div>
-          ) : (
-            filteredChats.map((chat) => (
-              <div
-                key={chat.user._id}
-                className={`flex items-center p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${selectedChat?.user._id === chat.user._id ? 'bg-blue-50' : ''}`}
-                onClick={() => handleChatSelect(chat.user._id)}
-              >
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-500 font-semibold">
-                  {chat.user.username.charAt(0).toUpperCase()}
-                </div>
-                <div className="ml-3 flex-1">
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-sm font-semibold text-gray-800">{chat.user.username}</h3>
-                    <span className="text-xs text-gray-500">{formatTime(chat.timestamp)}</span>
-                  </div>
-                  <div className="flex justify-between items-center mt-1">
-                    <p className="text-sm text-gray-600 truncate max-w-[150px]">{chat.lastMessage}</p>
-                    {chat.unreadCount > 0 && (
-                      <span className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
-                        {chat.unreadCount}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
+    <div className="w-screen h-screen relative bg-white dark-mode overflow-x-hidden">
+      <ToastContainer />
+      
+      {/* Navigation Bar - Similar to Explore component */}
+      <div className="h-[15%] p-4 w-full flex justify-center items-center">
+        <NavBar handler={() => { setSideBar(!sideBar); }} />
       </div>
-
-      <div className={`flex-1 flex flex-col ${!selectedChat ? 'hidden md:flex' : 'flex'}`}>
-        {selectedChat ? (
-          <>
-            <div className="bg-white p-4 flex items-center border-b border-gray-200">
-              <button
-                className="md:hidden mr-2 text-gray-600"
-                onClick={() => {
-                  setSelectedChat(null);
-                  navigate('/chat', { replace: true });
-                }}
-              >
-                <ChevronLeft size={20} />
-              </button>
-              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-500 font-semibold">
-                {selectedChat.user.username.charAt(0).toUpperCase()}
-              </div>
-              <div className="ml-3 flex-1">
-                <h3 className="font-medium text-gray-800">{selectedChat.user.username}</h3>
-                <p className="text-xs text-gray-500">
-                  {typingUsers[selectedChat.user._id] ? 'Typing...' : 'Active now'}
-                </p>
-              </div>
-              {fetchingUsername && (
-                <div className="ml-2">
-                  <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
-                </div>
-              )}
-            </div>
-
-            <div className="flex-1 bg-gray-50 p-4 overflow-y-auto">
-              {fetchingChat ? (
-                <div className="flex flex-col justify-center items-center h-full space-y-2">
-                  <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
-                  <p className="text-sm text-gray-500">Loading messages...</p>
-                </div>
-              ) : messages.length === 0 ? (
-                <div className="flex justify-center items-center h-full text-gray-500">
-                  No messages yet. Start a conversation!
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {messages.map((message, index) => {
-                    const isCurrentUser = message.sender === user._id;
-                    const showDate = index === 0 ||
-                      formatDate(messages[index - 1].timestamp) !== formatDate(message.timestamp);
-
-                    return (
-                      <div key={message._id}>
-                        {showDate && (
-                          <div className="text-center my-4">
-                            <span className="bg-gray-200 text-gray-600 text-xs px-2 py-1 rounded-full">
-                              {formatDate(message.timestamp)}
-                            </span>
-                          </div>
-                        )}
-                        <div className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}>
-                          <div className={`max-w-[75%] px-4 py-2 rounded-lg ${
-                            isCurrentUser ? 'bg-blue-600 text-white' : 'bg-white text-gray-800 border border-gray-200'
-                          }`}>
-                            <p>{message.content}</p>
-                            <div className={`text-xs mt-1 flex justify-end ${
-                              isCurrentUser ? 'text-blue-200' : 'text-gray-500'
-                            }`}>
-                              <span>{formatTime(message.timestamp)}</span>
-                              {isCurrentUser && (
-                                <span className="ml-1">
-                                  {message.read ? <CheckCheck size={12} /> : <Check size={12} />}
-                                </span>
-                              )}
-                            </div>
-                          </div>
+      
+      <div className="h-[85%] w-full flex gap-4 p-5 relative overflow-hidden">
+        <div ref={mainContentRef} className="w-full h-full relative flex overflow-hidden">
+          {/* Main Messaging Interface */}
+          <div className="flex h-full bg-gray-100 w-full">
+            <div className={`bg-white flex-shrink-0 border-r border-gray-200 ${selectedChat ? 'hidden md:block' : 'block'}`} 
+                 style={{ width: selectedChat ? '320px' : '100%' }}>
+              <div className="p-4 border-b border-gray-200">
+                <h1 className="text-xl font-semibold text-gray-800">Messages</h1>
+                <div className="mt-4 relative">
+                  <input
+                    type="text"
+                    placeholder="Search users..."
+                    className="w-full p-2 pl-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onFocus={() => setShowSearchResults(true)}
+                  />
+                  <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
+                  
+                  {showSearchResults && searchTerm.trim() !== "" && (
+                    <div className="absolute z-10 mt-2 w-full bg-white rounded-lg shadow-lg border border-gray-200">
+                      {searchResults.length > 0 ? (
+                        <>
+                          {searchResults.map((result) => {
+                            const isChatExisting = chatList.some(chat => 
+                              chat.user._id === result._id || 
+                              chat.user.username.toLowerCase() === result.username.toLowerCase()
+                            );
+                            return (
+                              <div
+                                key={result._id}
+                                className="flex items-center p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                                onClick={() => handleDirectChat(result)}
+                              >
+                                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-500 font-semibold">
+                                  {result.username.charAt(0).toUpperCase()}
+                                </div>
+                                <div className="ml-3 flex-1">
+                                  <div className="flex justify-between items-center">
+                                    <h3 className="text-sm font-medium text-gray-800">{result.username}</h3>
+                                    {isChatExisting ? (
+                                      <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full">Exists</span>
+                                    ) : (
+                                      <span className="text-xs text-blue-500 flex items-center">
+                                        <UserPlus size={14} className="mr-1" /> New chat
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </>
+                      ) : (
+                        <div className="p-3 text-center text-gray-500 text-sm">
+                          No users found matching "{searchTerm}"
                         </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="overflow-y-auto h-[calc(100%-8rem)]">
+                {loading && chatList.length === 0 ? (
+                  <div className="flex justify-center items-center h-40">
+                    <div className="animate-pulse text-gray-500">Loading conversations...</div>
+                  </div>
+                ) : filteredChats.length === 0 ? (
+                  <div className="text-center p-4 text-gray-500">
+                    No conversations found
+                  </div>
+                ) : (
+                  filteredChats.map((chat) => (
+                    <div
+                      key={chat.user._id}
+                      className={`flex items-center p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors ${selectedChat?.user._id === chat.user._id ? 'bg-blue-50' : ''}`}
+                      onClick={() => handleChatSelect(chat.user._id)}
+                    >
+                      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-500 font-semibold">
+                        {chat.user.username.charAt(0).toUpperCase()}
                       </div>
-                    );
-                  })}
-                  {typingUsers[selectedChat.user._id] && (
-                    <div className="flex justify-start">
-                      <div className="bg-white text-gray-800 border border-gray-200 px-4 py-2 rounded-lg">
-                        <div className="flex space-x-1">
-                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                          <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                      <div className="ml-3 flex-1">
+                        <div className="flex justify-between items-center">
+                          <h3 className="text-sm font-semibold text-gray-800">{chat.user.username}</h3>
+                          <span className="text-xs text-gray-500">{formatTime(chat.timestamp)}</span>
+                        </div>
+                        <div className="flex justify-between items-center mt-1">
+                          <p className="text-sm text-gray-600 truncate max-w-[150px]">{chat.lastMessage}</p>
+                          {chat.unreadCount > 0 && (
+                            <span className="bg-blue-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                              {chat.unreadCount}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
-                  )}
-                  <div ref={messagesEndRef} />
+                  ))
+                )}
+              </div>
+            </div>
+
+            <div className={`flex-1 flex flex-col ${!selectedChat ? 'hidden md:flex' : 'flex'}`}>
+              {selectedChat ? (
+                <>
+                  <div className="bg-white p-4 flex items-center border-b border-gray-200">
+                    <button
+                      className="md:hidden mr-2 text-gray-600"
+                      onClick={() => {
+                        setSelectedChat(null);
+                        navigate('/chat', { replace: true });
+                      }}
+                    >
+                      <ChevronLeft size={20} />
+                    </button>
+                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-500 font-semibold">
+                      {selectedChat.user.username.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="ml-3 flex-1">
+                      <h3 className="font-medium text-gray-800">{selectedChat.user.username}</h3>
+                      <p className="text-xs text-gray-500">
+                        {typingUsers[selectedChat.user._id] ? 'Typing...' : 'Active now'}
+                      </p>
+                    </div>
+                    {fetchingUsername && (
+                      <div className="ml-2">
+                        <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex-1 bg-gray-50 p-4 overflow-y-auto">
+                    {fetchingChat ? (
+                      <div className="flex flex-col justify-center items-center h-full space-y-2">
+                        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+                        <p className="text-sm text-gray-500">Loading messages...</p>
+                      </div>
+                    ) : messages.length === 0 ? (
+                      <div className="flex justify-center items-center h-full text-gray-500">
+                        No messages yet. Start a conversation!
+                      </div>
+                    ) : (
+                      <div className="space-y-4">
+                        {messages.map((message, index) => {
+                          const isCurrentUser = message.sender === user._id;
+                          const showDate = index === 0 ||
+                            formatDate(messages[index - 1].timestamp) !== formatDate(message.timestamp);
+
+                          return (
+                            <div key={message._id}>
+                              {showDate && (
+                                <div className="text-center my-4">
+                                  <span className="bg-gray-200 text-gray-600 text-xs px-2 py-1 rounded-full">
+                                    {formatDate(message.timestamp)}
+                                  </span>
+                                </div>
+                              )}
+                              <div className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}>
+                                <div className={`max-w-[75%] px-4 py-2 rounded-lg ${
+                                  isCurrentUser ? 'bg-blue-600 text-white' : 'bg-white text-gray-800 border border-gray-200'
+                                }`}>
+                                  <p>{message.content}</p>
+                                  <div className={`text-xs mt-1 flex justify-end ${
+                                    isCurrentUser ? 'text-blue-200' : 'text-gray-500'
+                                  }`}>
+                                    <span>{formatTime(message.timestamp)}</span>
+                                    {isCurrentUser && (
+                                      <span className="ml-1">
+                                        {message.read ? <CheckCheck size={12} /> : <Check size={12} />}
+                                      </span>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                        {typingUsers[selectedChat.user._id] && (
+                          <div className="flex justify-start">
+                            <div className="bg-white text-gray-800 border border-gray-200 px-4 py-2 rounded-lg">
+                              <div className="flex space-x-1">
+                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                        <div ref={messagesEndRef} />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="bg-white p-4 border-t border-gray-200">
+                    <div className="flex">
+                      <input
+                        type="text"
+                        placeholder="Type a message..."
+                        className="flex-1 border border-gray-300 rounded-l-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value={messageInput}
+                        onChange={handleInputChange}
+                        onKeyPress={handleKeyPress}
+                      />
+                      <button 
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-r-lg flex items-center justify-center transition-colors"
+                        onClick={sendMessage}
+                      >
+                        <Send size={18} />
+                      </button>
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <div className="flex-1 flex flex-col items-center justify-center bg-gray-50 text-gray-500">
+                  <MessageCircle size={48} className="text-gray-300 mb-4" />
+                  <h3 className="text-xl font-medium">Your Messages</h3>
+                  <p className="text-sm mt-2">Select a conversation or search for a user to start messaging</p>
                 </div>
               )}
             </div>
-
-            <div className="bg-white p-4 border-t border-gray-200">
-              <div className="flex">
-                <input
-                  type="text"
-                  placeholder="Type a message..."
-                  className="flex-1 border border-gray-300 rounded-l-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  value={messageInput}
-                  onChange={handleInputChange}
-                  onKeyPress={handleKeyPress}
-                />
-                <button 
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-r-lg flex items-center justify-center transition-colors"
-                  onClick={sendMessage}
-                >
-                  <Send size={18} />
-                </button>
-              </div>
-            </div>
-          </>
-        ) : (
-          <div className="flex-1 flex flex-col items-center justify-center bg-gray-50 text-gray-500">
-            <MessageCircle size={48} className="text-gray-300 mb-4" />
-            <h3 className="text-xl font-medium">Your Messages</h3>
-            <p className="text-sm mt-2">Select a conversation or search for a user to start messaging</p>
           </div>
-        )}
+        </div>
+        
+        {/* Sidebar component similar to Explore component */}
+        <div 
+          ref={sideRef} 
+          className="w-[25%] right-[-10%] absolute h-full flex flex-col gap-2 justify-center items-center overflow-y-auto"
+        >
+          <SideBar />
+        </div>
       </div>
     </div>
   );
