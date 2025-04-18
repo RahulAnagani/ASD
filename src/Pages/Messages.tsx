@@ -512,14 +512,12 @@ const MessagingComponent: React.FC<{}> = () => {
     <div className="w-screen h-screen relative bg-white dark-mode overflow-x-hidden">
       <ToastContainer />
       
-      {/* Navigation Bar - Similar to Explore component */}
       <div className="h-[15%] p-4 w-full flex justify-center items-center">
         <NavBar handler={() => { setSideBar(!sideBar); }} />
       </div>
       
       <div className="h-[85%] w-full flex gap-4 p-5 relative overflow-hidden">
         <div ref={mainContentRef} className="w-full h-full relative flex overflow-hidden">
-          {/* Main Messaging Interface */}
           <div className="flex h-full bg-gray-100 w-full">
             <div className={`bg-white flex-shrink-0 border-r border-gray-200 ${selectedChat ? 'hidden md:block' : 'block'}`} 
                  style={{ width: selectedChat ? '320px' : '100%' }}>
@@ -740,7 +738,6 @@ const MessagingComponent: React.FC<{}> = () => {
           </div>
         </div>
         
-        {/* Sidebar component similar to Explore component */}
         <div 
           ref={sideRef} 
           className="w-[25%] right-[-10%] absolute h-full flex flex-col gap-2 justify-center items-center overflow-y-auto"
