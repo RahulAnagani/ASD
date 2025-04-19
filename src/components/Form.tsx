@@ -7,7 +7,7 @@ const Form: React.FC<FormProps> = ({ children, submitHandler }) => {
     return (
         <form
             onSubmit={submitHandler} 
-            className="bg-white flex flex-col justify-center items-center h-[60%] w-[60%] rounded gap-3 relative"
+            className="bg-white flex  flex-col justify-center items-center h-[60%] w-[60%] normal expand rounded gap-3 relative"
         >
             {children}
         </form>
