@@ -535,3 +535,95 @@
     );
   background-size: var(--s) calc(var(--s) * 0.577);
 }
+
+@media( max-width:960px ){
+  .jsp{
+    display:none;
+    width: 0%;
+  }
+  .blaj{
+    padding: 0;
+    width: 20%;
+  }
+  .stch{
+    padding: 0;
+    width: 70%;
+  }
+  .srh{
+    display: none;
+  }
+  .laga{
+    width: 15%;
+  }
+  .prof{
+    width: 25px;
+    height: 25px;
+  }
+  .drr{
+    justify-content: center;
+  }
+  .hhvm{
+    position: absolute;
+    right: 0;
+  }
+  .thiry{
+    width: 30%;
+  }
+
+}
+@media( min-width:960px ){
+  .drr{
+    justify-items: center;
+  }
+  .rsp{
+    display: none;
+  }
+  .thiry{
+    width: 30%;
+  }
+
+}
+@media( max-width:850px ){
+  .lefter{
+    display: none;
+  }
+  .righter{
+    width: 100%;
+  }
+  .drr{
+    justify-content: center;
+  }
+  .hhvm{
+    position: absolute;
+    right: 0;
+  }
+}
+@media( max-width:550px ){
+  .tappa{
+    display: flex;
+    flex-direction: column;
+  }
+  .fuf{
+    width: 90%;
+  }
+  .puf{
+    width: 90%;
+    height: 90%;
+  }
+  .drr{
+    justify-content: center;
+  }
+  .hhvm{
+    position: absolute;
+    right: 0;
+  }
+  .thiry{
+    width: 30%;
+  }
+  .chinnadi{
+    font-size: x-small;
+  }
+  .chins{
+    font-size: small;
+  }
+}

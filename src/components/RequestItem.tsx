@@ -20,8 +20,8 @@ type Request = {
   status: "pending" | "accepted" | "declined" | "received" | "canceled";
   fromBook: book | { title: ""; author: ""; genre: "" };
   toBook: book;
-  id:string;
-  handler:(val:boolean)=>void;
+  id: string;
+  handler: (val: boolean) => void;
 };
 
 const Request: React.FC<Request> = ({
@@ -35,93 +35,102 @@ const Request: React.FC<Request> = ({
   id,
   handler
 }) => {
-  const nav=useNavigate();
+  const nav = useNavigate();
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
   const [currentStatus, setCurrentStatus] = useState<Request["status"]>(status);
-  const serverApi=import.meta.env.VITE_API_URL;
-  const controller=useRef<AbortController|null>(null);
-  const acceptHandler=async()=>{
+  const serverApi = import.meta.env.VITE_API_URL;
+  const controller = useRef<AbortController | null>(null);
+  
+  const acceptHandler = async () => {
     handler(true);
-    const token=localStorage.getItem("token")
-    if(!token){handler(false);return;}
-    if(controller.current)controller.current.abort();
-    const actuallController=new AbortController();
-    controller.current=actuallController
-    axios.post(`${serverApi}/request/accept`,{reqId:id},{headers:{"Authorization":`pspk ${token}`},signal:actuallController.signal})
-    .then((res)=>{
-      if(res.data.success){
-        setCurrentStatus("accepted");
+    const token = localStorage.getItem("token")
+    if (!token) { handler(false); return; }
+    if (controller.current) controller.current.abort();
+    const actualController = new AbortController();
+    controller.current = actualController
+    axios.post(`${serverApi}/request/accept`, { reqId: id }, { headers: { "Authorization": `pspk ${token}` }, signal: actualController.signal })
+      .then((res) => {
+        if (res.data.success) {
+          setCurrentStatus("accepted");
+          handler(false);
+        }
+        else {
+          handler(false);
+          return;
+        }
+      })
+      .catch(e => {
         handler(false);
-      }
-      else{
-        handler(false);
-        return ;
-      }
-    })
-    .catch(e=>{
-      handler(false);
-      console.log(e);
-    })
+        console.log(e);
+      })
   }
-  const ignoreHandler=async()=>{
+  
+  const ignoreHandler = async () => {
     handler(true);
-    const token=localStorage.getItem("token")
-    if(!token){handler(false);return;}
-    if(controller.current)controller.current.abort();
-    const actuallController=new AbortController();
-    controller.current=actuallController
-    axios.post(`${serverApi}/request/decline`,{reqId:id},{headers:{"Authorization":`pspk ${token}`},signal:actuallController.signal})
-    .then((res)=>{
-      if(res.data.success){
-        setCurrentStatus("declined");
+    const token = localStorage.getItem("token")
+    if (!token) { handler(false); return; }
+    if (controller.current) controller.current.abort();
+    const actualController = new AbortController();
+    controller.current = actualController
+    axios.post(`${serverApi}/request/decline`, { reqId: id }, { headers: { "Authorization": `pspk ${token}` }, signal: actualController.signal })
+      .then((res) => {
+        if (res.data.success) {
+          setCurrentStatus("declined");
+          handler(false);
+        }
+        else {
+          handler(false);
+          return;
+        }
+      })
+      .catch(e => {
+        console.log(e);
         handler(false);
-      }
-      else{
-        handler(false);
-        return ;
-      }
-    })
-    .catch(e=>{
-      console.log(e);
-      handler(false);
-    })
+      })
   }
-  const cancelHandler=async()=>{
+  
+  const cancelHandler = async () => {
     handler(true);
-    const token=localStorage.getItem("token")
-    if(!token){handler(false);return;}
-    if(controller.current)controller.current.abort();
-    const actuallController=new AbortController();
-    controller.current=actuallController
-    axios.post(`${serverApi}/request/cancel`,{reqId:id},{headers:{"Authorization":`pspk ${token}`},signal:actuallController.signal})
-    .then((res)=>{
-      if(res.data.success){
-        setCurrentStatus("canceled");
+    const token = localStorage.getItem("token")
+    if (!token) { handler(false); return; }
+    if (controller.current) controller.current.abort();
+    const actualController = new AbortController();
+    controller.current = actualController
+    axios.post(`${serverApi}/request/cancel`, { reqId: id }, { headers: { "Authorization": `pspk ${token}` }, signal: actualController.signal })
+      .then((res) => {
+        if (res.data.success) {
+          setCurrentStatus("canceled");
+          handler(false);
+        }
+        else {
+          handler(false);
+          return;
+        }
+      })
+      .catch(e => {
         handler(false);
-      }
-      else{
-        handler(false);
-        return ;
-      }
-    })
-    .catch(e=>{
-      handler(false);
-      console.log(e);
-    })
+        console.log(e);
+      })
   }
-  const handleAction = async(action: string) => {
+  
+  const markReceivedHandler = async () => {
+    setCurrentStatus("received");
+  };
+
+  const handleAction = async (action: string) => {
     switch (action) {
       case "Accept":
         await acceptHandler();
         break;
       case "Ignore":
+      case "Decline":
         await ignoreHandler();
         break;
       case "Cancel":
         await cancelHandler();
         break;
       case "MarkReceived":
-        setCurrentStatus("received");
+        await markReceivedHandler();
         break;
       default:
         break;
@@ -144,174 +153,167 @@ const Request: React.FC<Request> = ({
     }
   };
 
+  const renderActionButtons = () => {
+    if (type === "sent" && currentStatus === "pending") {
+      return (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleAction("Cancel");
+          }}
+          className="px-3 py-1 cursor-pointer bg-gradient-to-r from-red-500 to-red-600 text-white rounded-md shadow hover:shadow-md transition-all duration-200 text-sm font-medium"
+          title="Cancel Request"
+        >
+          Cancel
+        </button>
+      );
+    }
+    
+    if (type === "received" && currentStatus === "pending") {
+      return (
+        <>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAction("Decline");
+            }}
+            className="px-3 py-1 bg-white border cursor-pointer border-gray-300 text-gray-700 rounded-md shadow hover:bg-gray-50 transition-all duration-200 text-sm font-medium dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-600"
+            title="Decline Request"
+          >
+            Decline
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAction("Accept");
+            }}
+            className="px-3 py-1 cursor-pointer bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-md shadow hover:shadow-md transition-all duration-200 text-sm font-medium"
+            title="Approve Request"
+          >
+            Accept
+          </button>
+        </>
+      );
+    }
+    
+    if (type === "sent" && currentStatus === "accepted") {
+      return (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleAction("MarkReceived");
+          }}
+          className="px-3 py-1 cursor-pointer bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-md shadow hover:shadow-md transition-all duration-200 text-sm font-medium flex items-center gap-1"
+          title="Mark as Received"
+        >
+          <MdDone className="text-sm" /> Received
+        </button>
+      );
+    }
+    
+    if (type === "received" && currentStatus === "accepted" && requestType === "swap") {
+      return (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleAction("MarkReceived");
+          }}
+          className="px-3 py-1 cursor-pointer bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-md shadow hover:shadow-md transition-all duration-200 text-sm font-medium flex items-center gap-1"
+          title="Mark as Received"
+        >
+          <MdDone className="text-sm" /> Received
+        </button>
+      );
+    }
+    
+    return (
+      <span className="text-xs">{new Date(time).toLocaleString()}</span>
+    );
+  };
+
   return (
-    <div className="flex flex-col border-b border-gray-300">
+    <div className="flex flex-col border-b relative border-gray-300">
       <div 
-        className={`flex justify-center items-center p-2 transition-all duration-300 ${
+        className={`flex justify-between items-center p-2 transition-all duration-300 ${
           isExpanded ? "border-b-0" : "h-[10dvh]"
         }`}
       >
-        <div className="w-[10%] flex justify-start items-center">
-          <img
-            className="h-10 w-10 bg-blue-400 rounded-full"
-            src="/person.svg"
-            alt="profile"
-          />
+        <div className="w-[10%] drr flex justify-start items-center">
+          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-500 font-semibold">
+            {username && username.charAt(0).toUpperCase()}
+          </div>
         </div>
 
-        <div onClick={()=>nav(`/chat/${username}`)} className="w-[20%] flex justify-start items-center text-sm">
+        <div onClick={() => nav(`/chat/${username}`)} className="w-[30%] flex chins justify-start drr items-center text-sm">
           <h1>
             @<span className="font-bold cursor-pointer">{username}</span>
           </h1>
         </div>
 
-        <div className="w-[20%] flex relative justify-start items-center">
+        <div className="w-[40%] chins p-2 flex relative justify-start items-center">
           <TooltipTitle
             title={toBook.title}
             author={toBook.author}
             genre={toBook.genre}
           />
         </div>
-
-        <div className="w-[20%] flex flex-col justify-start items-center">
-          <h1 className="font-semibold flex items-center gap-1">
-            {requestType === 'swap' ? (
-              <>
-                {requestType}
-                <MdOutlineSwapVerticalCircle />
-              </>
-            ) : (
-              <>
-                {requestType}
-                <BiSolidPurchaseTagAlt />
-              </>
+        <div className="hhvm w-[30%] right-0">
+          <div className="flex drr flex-col justify-start items-center">
+            <h1 className="font-semibold chins flex items-center gap-1">
+              {requestType === 'swap' ? (
+                <>
+                  {requestType}
+                  <MdOutlineSwapVerticalCircle />
+                </>
+              ) : (
+                <>
+                  {requestType}
+                  <BiSolidPurchaseTagAlt />
+                </>
+              )}
+            </h1>
+            {requestType === "swap" && (
+              <div className="flex jsp text-sm">
+                <h1 className="text-gray-600 mr-1">title:</h1>
+                <TooltipTitle
+                  title={fromBook.title}
+                  author={fromBook.author}
+                  genre={fromBook.genre}
+                />
+              </div>
             )}
-          </h1>
-          {requestType === "swap" && (
-            <div className="flex text-sm">
-              <h1 className="text-gray-600 mr-1">title:</h1>
-              <TooltipTitle
-                title={fromBook.title}
-                author={fromBook.author}
-                genre={fromBook.genre}
-              />
-            </div>
-          )}
+          </div>
         </div>
 
-        <div className="w-[10%] flex justify-start items-center">
+        <div className="w-[10%] jsp flex justify-start items-center">
           <span className={`py-1 px-2 rounded-full text-xs font-medium ${getStatusBadgeStyle(currentStatus)}`}>
             {currentStatus}
           </span>
         </div>
 
         <div className="w-[20%] flex justify-around items-center">
-          {type === "received" && currentStatus === "pending" ? (
-            <div className="flex gap-2">
-              {!isExpanded&&(<>
-                <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAction("Accept");
-                }}
-                className="px-3 py-1 cursor-pointer bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-md shadow hover:shadow-md transition-all duration-200 text-sm font-medium"
-                title="Approve Request"
-              >
-                Accept
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAction("Decline");
-                }}
-                className="px-3 py-1 bg-white border cursor-pointer border-gray-300 text-gray-700 rounded-md shadow hover:bg-gray-50 transition-all duration-200 text-sm font-medium dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-gray-600"
-                title="Decline Request"
-                >
-                Decline
-              </button>
-              </>)
-              }
-              <MdExpandMore
-                className={`cursor-pointer bg-gray-300 dark:text-black text-bold rounded-full transform transition-transform duration-300 ${
-                  isExpanded ? "rotate-180" : ""
-                }`}
-                onClick={() => setIsExpanded(!isExpanded)}
-              />
-            </div>
-          ) : type === "sent" && currentStatus === "pending" ? (
-            <div className="flex items-center gap-2">
-              <span className="text-xs">{new Date(time).toLocaleString()}</span>
-              {!isExpanded&&<button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAction("Cancel");
-                }}
-                className="px-3 py-1 cursor-pointer bg-red-500 hover:bg-red-600 text-white rounded-md shadow hover:shadow-md transition-all duration-200 text-sm font-medium"
-                title="Cancel Request"
-              >
-                Cancel
-              </button>}
-              <MdExpandMore
-                className={`cursor-pointer bg-gray-300 dark:text-black text-bold rounded-full transform transition-transform duration-300 ${
-                  isExpanded ? "rotate-180" : ""
-                }`}
-                onClick={() => setIsExpanded(!isExpanded)}
-              />
-            </div>
-          ) : type === "received" && currentStatus === "accepted" ? (
-            <div className="flex items-center gap-2">
-              <span className="text-xs">{new Date(time).toLocaleString()}</span>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAction("MarkReceived");
-                }}
-                className="px-3 py-1 bg-blue-500 cursor-pointer hover:bg-blue-600 text-white rounded-md shadow hover:shadow-md transition-all duration-200 text-sm font-medium flex items-center gap-1"
-                title="Mark as Received"
-              >
-                <MdDone className="text-lg" /> Received
-              </button>
-              <MdExpandMore
-                className={`cursor-pointer bg-gray-300 dark:text-black text-bold rounded-full transform transition-transform duration-300 ${
-                  isExpanded ? "rotate-180" : ""
-                }`}
-                onClick={() => setIsExpanded(!isExpanded)}
-              />
-            </div>
-          ) : type === "sent" && currentStatus === "accepted" ? (
-            <div className="flex items-center gap-2">
-              <span className="text-xs">{new Date(time).toLocaleString()}</span>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAction("MarkReceived");
-                }}
-                className="px-3 py-1 cursor-pointer bg-blue-500 hover:bg-blue-600 text-white rounded-md shadow hover:shadow-md transition-all duration-200 text-sm font-medium flex items-center gap-1"
-                title="Mark as Received"
-              >
-                <MdDone className="text-lg" /> Received
-              </button>
-              <MdExpandMore
-                className={`cursor-pointer bg-gray-300 dark:text-black text-bold rounded-full transform transition-transform duration-300 ${
-                  isExpanded ? "rotate-180" : ""
-                }`}
-                onClick={() => setIsExpanded(!isExpanded)}
-              />
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <span className="text-xs">{new Date(time).toLocaleString()}</span>
-              <MdExpandMore
-                className={`cursor-pointer bg-gray-300 dark:text-black text-bold rounded-full transform transition-transform duration-300 ${
-                  isExpanded ? "rotate-180" : ""
-                }`}
-                onClick={() => setIsExpanded(!isExpanded)}
-              />
-            </div>
-          )}
+          <div className="flex jsp items-center gap-2">
+            {!isExpanded && renderActionButtons()}
+            <MdExpandMore
+              className={`cursor-pointer bg-gray-300 dark:text-black text-bold rounded-full transform transition-transform duration-300 ${
+                isExpanded ? "rotate-180" : ""
+              }`}
+              onClick={() => setIsExpanded(!isExpanded)}
+            />
+          </div>
         </div>
       </div>
-
+      
+      <div className="w-full flex justify-center items-center">
+        <div onClick={() => setIsExpanded(!isExpanded)} className="w-[50%] p-1 dark:bg-gray-500 sm:hidden flex justify-center items-center bg-gray-200 rounded">
+          <MdExpandMore
+            className={`cursor-pointer bg-gray-300 dark:text-black text-bold rounded-full transform transition-transform duration-300 ${
+              isExpanded ? "rotate-180" : ""
+            }`}
+          />
+        </div>
+      </div>
+      
       {isExpanded && (
         <div className="dark:bg-slate-900 bg-gray-50 cursor-default p-6 text-sm rounded-b-md shadow-inner">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -420,8 +422,10 @@ const Request: React.FC<Request> = ({
               <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-md border border-blue-200 dark:border-blue-800 mb-4">
                 <h3 className="font-medium text-blue-800 dark:text-blue-300 mb-2">Next Steps</h3>
                 <p className="text-blue-700 dark:text-blue-200">
-                  {type === "received" 
-                    ? `Please arrange the handover of "${toBook.title}" with ${username}. Once completed, mark this exchange as "Received".`
+                  {type === "received" && requestType === "swap"
+                    ? `Please arrange the handover of "${toBook.title}" with ${username}. Once you receive the book "${fromBook.title}", mark this exchange as "Received".`
+                    : type === "received" && requestType === "buy"
+                    ? `Please arrange the handover of "${toBook.title}" with ${username}.`
                     : `Your request has been accepted. Please arrange with ${username} to complete the ${requestType}. Once you receive the book "${toBook.title}", mark it as "Received".`
                   }
                 </p>
@@ -454,7 +458,15 @@ const Request: React.FC<Request> = ({
                 Cancel Request
               </button>
             )}
-            {currentStatus === "accepted" && (
+            {type === "sent" && currentStatus === "accepted" && (
+              <button
+                className="bg-green-600 cursor-pointer text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors font-medium flex items-center gap-1"
+                onClick={() => handleAction("MarkReceived")}
+              >
+                <MdDone className="text-lg" /> Mark as Received
+              </button>
+            )}
+            {type === "received" && currentStatus === "accepted" && requestType === "swap" && (
               <button
                 className="bg-green-600 cursor-pointer text-white px-4 py-2 rounded-md hover:bg-green-700 transition-colors font-medium flex items-center gap-1"
                 onClick={() => handleAction("MarkReceived")}

@@ -37,10 +37,10 @@ const Explore = () => {
     if (sideBar) {
       gsap.to(sideRef.current, {
         right: 0,
-        width: "25%",
+        width:window.innerWidth >= 768 ? "25%" : "100%",
       });
       gsap.to(leftTab.current, {
-        width: "75%",
+        width: window.innerWidth >= 768 ? "75%" : "0%",
       });
     } else {
       gsap.to(sideRef.current, {
@@ -96,7 +96,7 @@ const Explore = () => {
           <h1 className="text-3xl font-bold">Discover New Reads Today!</h1>
           <div className="flex-1 overflow-y-auto mt-4 pr-2">
             <div className="w-full mt-6 p-2">
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 mt-4">
+              <div className="grid grid-cols-1 justify-items-center sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 mt-4">
                 {books.map((e, i) => (
                   <BookCard
                     key={i}

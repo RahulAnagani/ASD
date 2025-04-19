@@ -17,7 +17,7 @@ const BookCondition: React.FC<BookConditionProps> = ({ onConditionChange,initial
   };
 
   return (
-    <div className="flex items-center w-full justify-start">
+    <div className="flex tappa items-center w-full justify-start">
         <h1 className="w-[50%] font-semibold text-white">Condition</h1>
     <div className="wrapper1 m-10">
       {["new", "good", "fair", "poor"].map((condition) => (

@@ -115,19 +115,23 @@ const DashBoard = () => {
     if (sideBar) {
       gsap.to(sideRef.current, {
         right: 0,
-        width: "25%"
+        width: window.innerWidth >= 768 ? "25%" : "100%",
+        duration: 0.3
       })
       gsap.to(leftTab.current, {
-        width: "75%"
+        width: window.innerWidth >= 768 ? "75%" : "0%",
+        duration: 0.3
       })
     }
     else {
       gsap.to(sideRef.current, {
         right: "-10%",
-        width: 0
+        width: 0,
+        duration: 0.3
       })
       gsap.to(leftTab.current, {
-        width: "100%"
+        width: "100%",
+        duration: 0.3
       })
     }
   }, [sideBar])
@@ -153,7 +157,7 @@ const DashBoard = () => {
               <h1 className="flex gap-2 items-center text-xl font-bold">
                 Top Genres <FaMoneyBillTrendUp />
               </h1>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4">
                 {genres.map((e, i) => (
                   <motion.div
                     key={e.value}
@@ -187,7 +191,7 @@ const DashBoard = () => {
                   <p>{error}</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-5 mt-4">
+                <div className="grid grid-cols-1 items-center place-items-center justify-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5 mt-4">
                   {trendingBooks.map((book, index) => (
                     <motion.div
                       key={index}
@@ -210,7 +214,7 @@ const DashBoard = () => {
           </div>
         </div>
 
-        <div ref={sideRef} className={`w-[25%] right-[-100%] absolute flex flex-col sm:grid-cols-1 gap-2 justify-center items-center overflow-y-auto`}>
+        <div ref={sideRef} className={`w-[25%] md:w-full siders right-[-100%] absolute flex flex-col sm:grid-cols-1 gap-2 justify-center items-center overflow-y-auto`}>
           <SideBar></SideBar>
         </div>
       </div>

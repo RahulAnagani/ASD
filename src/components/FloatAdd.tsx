@@ -150,13 +150,13 @@ const FloatAdd:React.FC<{handle:()=>void,handleSucces:()=>void,handlerError:()=>
             <div className="w-full h-full z-100 absolute flex justify-center items-center glassy-metallic  flex-col">
                 <form onSubmit={(e:React.FormEvent<HTMLFormElement>)=>{e.preventDefault();
 
-}} className="bg-white dark:bg-gray-700 dark:border-gray-600 border relative border-gray-300 p-0 w-[75%] flex items-center justify-start gap-0 h-[75%] rounded" >
+}} className="bg-white dark:bg-gray-700 dark:border-gray-600 border relative border-gray-300 p-0 puf w-[75%] flex  items-center justify-start gap-0 h-[75%] rounded" >
                     <>
-                    <div className="w-[50%] h-full">
+                    <div className="w-[50%] lefter h-full">
                         <img src="/BookSwap-React/login1.jpg" className="w-full rounded h-full rounded-r-none object-cover"></img>
                     </div>
                     <ImCross onClick={handle} className="absolute z-100 right-1 invert top-1 m-4 cursor-pointer hover:fill-red-500 hover:invert-0"/>
-                    <div className="w-[50%] h-full flex flex-col gap-5 relative p-5  bg-gradient-to-br from-[#1e3c72] via-[#2a5298] to-[#6dd5ed]  items-center">
+                    <div className="w-[50%] righter h-full flex flex-col gap-5 relative py-5 rounded  bg-gradient-to-br from-[#1e3c72] via-[#2a5298] to-[#6dd5ed]  items-center">
                     {step>1&&<IoChevronBackSharp onClick={()=>{
                         if(step>1){
                             setStep(step-1);
@@ -167,7 +167,7 @@ const FloatAdd:React.FC<{handle:()=>void,handleSucces:()=>void,handlerError:()=>
                         {step===1&&<div className="w-full flex justify-center items-center">
                         <div ref={searchRef} className="w-[100%] flex flex-col p-0 relative justify-center items-center ">
                         <SearchBar value={query} handler={suggestionHandler}></SearchBar>
-                        <div className="absolute w-[75%] h-auto rounded rounded-t-0 dark:bg-gray-900 bg-gray-300 z-100 top-[90%]">
+                        <div className="absolute w-[75%] fuf h-auto rounded rounded-t-0 dark:bg-gray-900 bg-gray-300 z-100 top-[90%]">
                             {
                                 suggestions.map((e)=>{
                                     return <Suggestion handler={handler} Okey={e.Okey}  key={e.coverId} title={e.title} author={e.author} coverId={e.coverId} cover={e.cover}></Suggestion>
@@ -191,7 +191,7 @@ const FloatAdd:React.FC<{handle:()=>void,handleSucces:()=>void,handlerError:()=>
                     </>}
                     {
                         step===3&&
-                        <div className="w-full flex items-center gap-10 flex-col justify-center p-2 ">
+                        <div className="w-full flex  items-center gap-10 flex-col justify-center p-2 ">
                         <BookCondition initial={cond} onConditionChange={(cnd:condition)=>{setCond(cnd)}}></BookCondition>
                         <Availability initial={av} onChange={(val)=>{setav(val)}}></Availability>
                         <button onClick={()=>{
@@ -208,7 +208,7 @@ const FloatAdd:React.FC<{handle:()=>void,handleSucces:()=>void,handlerError:()=>
                                 <>
                                     <div className="w-full h-full flex overflow-hidden items-center justify-start flex-col">
                                         <div className="w-full m-2">
-                                        <h1 className="font-bold text-white text-lg">Setup Book Location</h1>
+                                        <h1 className="font-bold text-white text-lg w-full px-5">Setup Book Location</h1>
                                         </div>
                                         {location.description.length===0?<div className="w-full flex-col flex relative items-center justify-center">
                                             <div className="w-full flex justify-center items-end">
@@ -216,7 +216,7 @@ const FloatAdd:React.FC<{handle:()=>void,handleSucces:()=>void,handlerError:()=>
                                             setLocationQuery(e.target.value);
                                         }}></SearchBar>
                                         </div>
-                                        <div className="w-[75%] top-[100%] max-h-60 overflow-auto ">
+                                        <div className="w-[75%] fuf top-[100%] h-80 overflow-y-auto ">
                                             {
                                                 locationPredictions.map((e,i)=>{
                                                     return (
@@ -235,7 +235,7 @@ const FloatAdd:React.FC<{handle:()=>void,handleSucces:()=>void,handlerError:()=>
                                         </div>
                                         </div>:
                                         <>
-                                            <div className="w-[50%] p-5 flex glassy-metallic mt-10 flex-col items-center justify-center">
+                                            <div className="w-[75%] fuf p-5 flex glassy-metallic mt-10 flex-col items-center justify-center">
                                                 <div className="w-full flex items-center justify-center">
                                                 <h1 className="text-white font-semibold text-lg">Selected Location: </h1>
                                                 </div>
@@ -253,7 +253,7 @@ const FloatAdd:React.FC<{handle:()=>void,handleSucces:()=>void,handlerError:()=>
                                                     setLocation({description:"",place_id:""});
                                                 }
                                                 }
-                                                className="flex items-center justify-center text-sm hover:underline cursor-pointer hover:text-red-500"><CgDanger />Choose another location</button>
+                                                className="flex items-center justify-center text-sm hover:underline text-white cursor-pointer hover:text-red-500"><CgDanger />Choose another location</button>
                                                 </div>
                                             </div>
                                         </>
@@ -328,4 +328,4 @@ const FloatAdd:React.FC<{handle:()=>void,handleSucces:()=>void,handlerError:()=>
             </div>
         )
     }
-    export default FloatAdd;
+    export default FloatAdd;    

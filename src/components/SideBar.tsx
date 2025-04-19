@@ -8,10 +8,16 @@ import { CgProfile } from "react-icons/cg";
 import { PiBooks } from "react-icons/pi";
 import { IoIosLogOut } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
+import RappaRappa from "./RappaRappa";
 const SideBar=()=>{
     const nav=useNavigate();
     return (
-        <div className="w-full h-full bg-white p-3 dark-mode">
+        <div className="w-full h-full p-2 dark-mode">
+            <button  className="bg-gray-100  dark:bg-gray-950 flex items-center justify-start   cursor-pointer hover:bg-gray-200  dark:hover:bg-gray-900 rounded  w-full p-2 font-semibold">
+                <div  className="w-[100%] p-5 h-full flex items-center justify-start">
+                    <h1>{localStorage.getItem("theme")}</h1><RappaRappa></RappaRappa>    
+                </div>
+            </button>
             <button onClick={()=>nav("/")} className="bg-gray-100  dark:bg-gray-950 flex items-center justify-start   cursor-pointer hover:bg-gray-200  dark:hover:bg-gray-900 rounded  w-full p-2 font-semibold">
                 <div className="w-[20%] h-full flex justify-center p-2 items-center">
                 <RiHome2Line />

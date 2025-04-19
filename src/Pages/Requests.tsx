@@ -55,7 +55,6 @@ const Requests = () => {
   const contentAreaRef = useRef<HTMLDivElement>(null);
   const mainContentRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const fetchRequests = async () => {
       const token = localStorage.getItem("token");
@@ -98,21 +97,19 @@ const Requests = () => {
   }, [tab]);
 
   useEffect(() => {
-    // Animate main content width when sidebar state changes
     if (mainContentRef.current) {
       gsap.to(mainContentRef.current, {
         duration: 0.3,
-        width: sidebarOpen ? "75%" : "100%",
+        width: sidebarOpen ? window.innerWidth >= 768 ? "75%" : "0%": "100%",
         ease: "power2.out"
       });
     }
 
-    // Animate sidebar
     if (sidebarRef.current) {
       if (sidebarOpen) {
         gsap.to(sidebarRef.current, {
           duration: 0.3,
-          width: "25%",
+          width:window.innerWidth >= 768 ? "25%" : "100%",
           opacity: 1,
           display: "block",
           ease: "power2.out"
@@ -189,39 +186,39 @@ const Requests = () => {
             
             <div className="w-full min-h-[50dvh] flex flex-col gap-3">
               <div
-                className="flex justify-center rounded items-center p-1 transition-all duration-300 h-[10dvh] bg-gray-100 dark:bg-gray-800"
+                className="flex justify-between rounded items-center p-1 transition-all duration-300 h-[10dvh] bg-gray-100 dark:bg-gray-800"
               >
                 <div className="w-[10%] flex justify-start items-center">
-                  <h1 className="font-bold text-sm text-gray-500 dark:text-gray-400">
+                  <h1 className="font-bold text-sm chins  text-gray-500 dark:text-gray-400">
                     Profile
                   </h1>
                 </div>
 
                 <div className="w-[20%] flex justify-start items-center">
-                  <h1 className="font-bold text-sm text-gray-500 dark:text-gray-400">
+                  <h1 className="font-bold text-sm chins text-gray-500 dark:text-gray-400">
                     Username
                   </h1>
                 </div>
 
-                <div className="w-[20%] flex relative justify-start items-center">
-                  <h1 className="font-bold text-sm text-gray-500 dark:text-gray-400">
+                <div className="w-[20%] thiry relative justify-start items-center">
+                  <h1 className="font-bold chins text-sm text-gray-500 dark:text-gray-400">
                     Book Title
                   </h1>
                 </div>
 
-                <div className="w-[20%] flex flex-col justify-start items-center">
-                  <h1 className="font-bold text-sm text-gray-500 dark:text-gray-400">
+                <div className="w-[20%]  flex flex-col justify-start items-center">
+                  <h1 className="font-bold chins text-sm text-gray-500 dark:text-gray-400">
                     Request Type
                   </h1>
                 </div>
 
-                <div className="w-[10%] flex justify-start items-center">
+                <div className="w-[10%] jsp flex justify-start items-center">
                   <h1 className="font-bold text-sm text-gray-500 dark:text-gray-400">
                     Status
                   </h1>
                 </div>
 
-                <div className="w-[20%] flex justify-around items-center">
+                <div className="w-[20%] jsp flex justify-around items-center">
                   <h1 className="font-bold text-sm text-gray-500 dark:text-gray-400">
                     Time of Request
                   </h1>

@@ -9,7 +9,7 @@ const Location:React.FC<locationProps>=({description,handler,place_id})=>{
         <>
             <div onClick={()=>{
                 handler(place_id,description);
-            }} className="w-full cursor-pointer border hover:bg-gray-500 p-1 border-b-gray-500 border-t-0 border-l-0 border-r-0 flex bg-gray-900">
+            }} className="w-full cursor-pointer border hover:bg-gray-500 p-1 border-b-gray-500 border-t-0 border-l-0 border-r-0 p-2 flex bg-white">
                     <div className="w-[20%] flex justify-center items-center">
                     <FaMapLocationDot />
                     </div>

@@ -7,8 +7,9 @@ const TooltipTitle = ({ title, author, genre }: { title: string; author: string;
     <div className="w-full flex relative justify-start items-center">
       <h1
         className="cursor-pointer font-semibold hover:underline"
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+        // onClick={()=>setHovered(true)} 
       >
         {title}
       </h1>

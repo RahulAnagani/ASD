@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Suggestion from "./Suggestion";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 const NavBar: React.FC<{ handler: () => void }> = ({ handler }) => {
     let cancelToken: any;
     const [query, setQuery] = useState('');
@@ -14,7 +16,16 @@ const NavBar: React.FC<{ handler: () => void }> = ({ handler }) => {
         coverId: string,
         Okey:string
     }
-
+    type user={
+        _id: string,
+        email: string,
+        username:string,
+        wishlist: string[],
+        swappedBooks: string[],
+        books: string[],
+        "__v": number
+    }
+    const user=useSelector((store:RootState)=>(store.user)) as user;
     const [suggestions, setSuggestions] = useState<suggestion[]>([]);
     const searchRef = useRef<HTMLDivElement>(null);
     const nav=useNavigate();
@@ -76,12 +87,12 @@ const NavBar: React.FC<{ handler: () => void }> = ({ handler }) => {
     return (
         <div className="w-full dark:bg-gray-900 dark:border-0 top-0 border border-gray-300 h-full rounded p-2">
             <ul className="w-full h-full flex">
-                <div className="w-[20%] flex justify-start items-center">
+                <div className="w-[20%] laga flex justify-start items-center">
                     <Link to={"/home"}>
                         <img className="h-13 w-13 hover:cursor-pointer dark:invert" src="/BookSwap-React/book-svgrepo-com.svg" alt="Logo" />
                     </Link>
                 </div>
-                <div ref={searchRef} className="w-[50%] flex flex-col relative justify-center items-center ">
+                <div ref={searchRef} className="w-[50%] stch flex flex-col relative justify-center items-center ">
                     <SearchBar value={query} handler={suggestionHandler}></SearchBar>
                     <div className="absolute w-[75%] h-auto rounded rounded-t-0 dark:bg-gray-900 bg-gray-300 z-100 top-[90%]">
                         {suggestions.map((e) => {
@@ -94,24 +105,31 @@ const NavBar: React.FC<{ handler: () => void }> = ({ handler }) => {
                         })}
                     </div>
                 </div>
-                <div className="w-[30%] flex justify-around items-center ">
-                    <div className="cursor-pointer flex flex-col justify-between items-center">
+                <div className="w-[30%] blaj flex justify-around items-center ">
+                    <div className="cursor-pointer jsp flex flex-col justify-between items-center">
                         <h1 className="text-xs font-semibold hover:underline dark:text-white text-gray-900">Near By</h1>
                     </div>
-                    <div className="cursor-pointer flex flex-col justify-between items-center">
+                    <div className="cursor-pointer jsp flex flex-col justify-between items-center">
                         <h1 onClick={()=>nav("/explore")} className="text-xs font-semibold hover:underline dark:text-white text-gray-900">Explore</h1>
                     </div>
-                    <div className="cursor-pointer flex flex-col justify-between items-center">
+                    <div className="cursor-pointer jsp flex flex-col justify-between items-center">
                         <h1 className="text-xs font-semibold hover:underline dark:text-white text-gray-900">
                             <Link to={"/requests"}>Requests</Link>
                         </h1>
                     </div>
-                    <div className="cursor-pointer flex flex-col justify-between items-center">
+                    <div className="cursor-pointer jsp flex flex-col justify-between items-center">
+                        <h1 className="text-xs font-semibold hover:underline dark:text-white text-gray-900">
+                            <Link to={"/requests"}>Chats</Link>
+                        </h1>
+                    </div>
+                    <div className="cursor-pointer jsp flex flex-col justify-between items-center">
                         <ThemeToggle />
                     </div>
                     <div className="cursor-pointer flex flex-col justify-between items-center">
-                        <div onClick={handler} className="profile rounded-full flex-col bg-gray-300 p-1 flex justify-center items-center">
-                            <img className="h-8 w-8 hover:cursor-pointer" src="/BookSwap-React/person.svg" alt="Profile" />
+                        <div onClick={handler} className="profile rounded-full flex-col bg-gray-300 p-0 flex justify-center items-center">
+                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-500 font-semibold">
+                                  {user&&user?.username?.charAt(0).toUpperCase()}
+                                </div>
                         </div>
                     </div>
                 </div>

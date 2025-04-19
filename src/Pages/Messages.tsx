@@ -90,29 +90,31 @@ const MessagingComponent: React.FC<{}> = () => {
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const chatListLoadedRef = useRef<boolean>(false);
   const initialUrlProcessedRef = useRef<boolean>(false);
-  
-  // Add state for sidebar similar to Explore component
+
   const [sideBar, setSideBar] = useState<boolean>(false);
   const sideRef = useRef(null);
   const mainContentRef = useRef(null);
 
-  // GSAP animation for sidebar
   useGSAP(() => {
     if (sideBar) {
       gsap.to(sideRef.current, {
         right: 0,
-        width: "25%",
+        width: window.innerWidth >= 768 ? "25%" : "100%",
+        duration: 0.3
       });
       gsap.to(mainContentRef.current, {
-        width: "75%",
+        width: window.innerWidth >= 768 ? "75%" : "0%",
+        duration: 0.3
       });
     } else {
       gsap.to(sideRef.current, {
         right: "-10%",
         width: 0,
+        duration: 0.3
       });
       gsap.to(mainContentRef.current, {
         width: "100%",
+        duration:0.3
       });
     }
   }, [sideBar]);
@@ -521,7 +523,7 @@ const MessagingComponent: React.FC<{}> = () => {
           <div className="flex h-full bg-gray-100 w-full">
             <div className={`bg-white flex-shrink-0 border-r border-gray-200 ${selectedChat ? 'hidden md:block' : 'block'}`} 
                  style={{ width: selectedChat ? '320px' : '100%' }}>
-              <div className="p-4 border-b border-gray-200">
+              <div className="p-4 border-b dark-mode border-gray-200">
                 <h1 className="text-xl font-semibold text-gray-800">Messages</h1>
                 <div className="mt-4 relative">
                   <input
@@ -546,7 +548,7 @@ const MessagingComponent: React.FC<{}> = () => {
                             return (
                               <div
                                 key={result._id}
-                                className="flex items-center p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                                className="flex items-center p-3  hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
                                 onClick={() => handleDirectChat(result)}
                               >
                                 <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-500 font-semibold">
@@ -578,7 +580,7 @@ const MessagingComponent: React.FC<{}> = () => {
                 </div>
               </div>
 
-              <div className="overflow-y-auto h-[calc(100%-8rem)]">
+              <div className="overflow-y-auto dark-mode h-[calc(100%-8rem)]">
                 {loading && chatList.length === 0 ? (
                   <div className="flex justify-center items-center h-40">
                     <div className="animate-pulse text-gray-500">Loading conversations...</div>
@@ -620,7 +622,7 @@ const MessagingComponent: React.FC<{}> = () => {
             <div className={`flex-1 flex flex-col ${!selectedChat ? 'hidden md:flex' : 'flex'}`}>
               {selectedChat ? (
                 <>
-                  <div className="bg-white p-4 flex items-center border-b border-gray-200">
+                  <div className="bg-white dark-mode p-4 flex items-center border-b border-gray-200">
                     <button
                       className="md:hidden mr-2 text-gray-600"
                       onClick={() => {
@@ -646,7 +648,7 @@ const MessagingComponent: React.FC<{}> = () => {
                     )}
                   </div>
 
-                  <div className="flex-1 bg-gray-50 p-4 overflow-y-auto">
+                  <div className="flex-1 bg-gray-50 p-4 dark-mode overflow-y-auto">
                     {fetchingChat ? (
                       <div className="flex flex-col justify-center items-center h-full space-y-2">
                         <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
@@ -708,7 +710,7 @@ const MessagingComponent: React.FC<{}> = () => {
                     )}
                   </div>
 
-                  <div className="bg-white p-4 border-t border-gray-200">
+                  <div className="bg-white dark-mode p-4 border-t border-gray-200">
                     <div className="flex">
                       <input
                         type="text"
