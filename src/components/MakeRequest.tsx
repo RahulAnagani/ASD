@@ -72,13 +72,12 @@ const BookRequestHandler: React.FC<BookRequestHandlerProps> = ({
     }
   }, []);
 
-  // Show request details after success animation
   useEffect(() => {
     let timer: number;
     if (success && !showDetails) {
       timer = window.setTimeout(() => {
         setShowDetails(true);
-      }, 3500); // Show details after 3.5 seconds
+      }, 3500); 
     }
     return () => {
       if (timer) clearTimeout(timer);

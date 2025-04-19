@@ -88,7 +88,6 @@ const AVBox: React.FC<{
     const hasAvailableBooks = otherUsersBooks.length > 0;
     const hasExistingRequests = existingRequests.length > 0;
     
-    // Format date to a readable string
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US', { 

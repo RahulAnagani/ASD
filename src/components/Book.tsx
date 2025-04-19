@@ -44,7 +44,6 @@ const Book: React.FC<props> = ({ title, author, cover, genHanlder, okeyPath }) =
         getGenre(title);
     }, [title]);
 
-    // Truncate long titles and author names
     const truncateText = (text: string, maxLength: number) => {
         return text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
     };

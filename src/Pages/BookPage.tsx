@@ -37,7 +37,6 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ markdownContent }) 
   return <div dangerouslySetInnerHTML={{ __html: formattedText }} />;
 };
 
-// Tab interface for content organization
 interface TabProps {
   title: string;
   active: boolean;
@@ -72,7 +71,6 @@ const Explore = () => {
   const [description, setDescription] = useState<string | undefined>("");
   const [links, setLinks] = useState<any[]>([]);
 
-  // Tab state
   const [activeTab, setActiveTab] = useState("description");
 
   const [isDescriptionExpanded, setDescriptionExpanded] = useState(false);
@@ -86,7 +84,7 @@ const Explore = () => {
         duration: 0.5
       });
       gsap.to(leftTab.current, {
-        width: "73%", // Adjusted to prevent overlap
+        width: "73%", 
         ease: "power2.out",
         duration: 0.5
       });
@@ -119,7 +117,6 @@ const Explore = () => {
         if (res.data) {
           setTitle(res.data.title);
           
-          // Handle covers
           if (res.data.covers && res.data.covers.length > 0) {
             setCover(res.data.covers[0] || "");
             setCoverIds(res.data.covers.slice(0, 5) || []);
