@@ -48,6 +48,7 @@ const Register = () => {
         <>
             <div className="w-screen h-screen flex flex-col-reverse md:flex-row overflow-auto md:overflow-hidden">
                 <div className="creds w-full md:w-[40%] min-h-[60vh] md:h-screen bg-gradient-to-r from-indigo-500 via-purple-400 to-pink-300 flex flex-col justify-center items-center p-4 md:p-0">
+                    <h1 className="font-bold hover:text-gray-500 text-xl text-center md:text-left ">Create Your Account</h1>
                     {otp.is === false ? 
                         <Form submitHandler={(e:React.FormEvent<HTMLFormElement>) => {
                             setFetch(true)
@@ -78,13 +79,12 @@ const Register = () => {
                                 }
                             })
                         }}>
-                            <h1 className="font-bold hover:text-gray-500 text-xl text-center md:text-left mb-4">Create Your Account</h1>
                             <Input handler={Ihandler} value={Creds.email} type="email" name="email" placeHolder="Enter your Email"></Input>
                             <Input handler={Ihandler} value={Creds.userName} type="text" name="userName" placeHolder="Enter your Username"></Input>
                             <Input handler={Ihandler} value={Creds.password} type="password" name="password" placeHolder="Enter your password"></Input>
                             <button className="text-white bg-blue-500 rounded py-2 px-2 font-bold mt-3 hover:cursor-pointer hover:bg-blue-600 hover:text-white w-[75%]">Register</button>
                             {error.is && <p className="text-red-500 text-xs p-2">{error.msg}</p>}
-                            <p className="md:absolute bottom-0 text-xs text-white font-bold p-2 mt-6 md:mt-0 text-center">Already a user? <Link to={"/login"}><span className="text-white underline hover:cursor-pointer hover:text-blue-100">Login</span></Link></p>
+                            <p className="md:absolute bottom-0 text-xs text-black font-bold p-2 mt-6 md:mt-0 text-center">Already a user? <Link to={"/login"}><span className="text-black underline hover:cursor-pointer hover:text-blue-100">Login</span></Link></p>
                             {fetch&&<div className="absolute flex justify-center items-center rounded w-full h-full glassy-metallic">
                                 <Loader></Loader>
                             </div>}
